@@ -1,0 +1,33 @@
+{% extends "dashboard_base.html" %}
+
+{% block page_title %}Últimos Empleos Publicados{% endblock %}
+
+{% block dashboard_content %}
+    <div class="table-responsive rounded">
+        <table class="table table-hover bg-light">
+            <thead>
+            <tr>
+                <th>Título de Puesto</th>
+                <th>Nº de Vacantes</th>
+                <th>Fecha de Publicación</th>
+                <th>Fecha de Finalización</th>
+
+            </tr>
+            </thead>
+            <tbody id="jobsTableBody">
+                {% for empleo in empleos %}
+                  <tr>
+{#                  TODO : display of the jobs is missing#}
+{#                      <td>{{ empleo['empleo_datos']['nombre_empleo'] }}</td>#}
+{#                      <td>{{ empleo['empleo_datos']['vacantes'] }}</td>#}
+{#                      <td>{{ empleo['empleo_datos']['fecha_publicacion'] }}</td>#}
+{#                      <td>{{ empleo['empleo_datos']['fecha_final'] }}</td>#}
+                  </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-primary new-job-btn">
+        <i class="fas fa-plus"></i> Nuevo Empleo
+    </button>
+{% endblock %}

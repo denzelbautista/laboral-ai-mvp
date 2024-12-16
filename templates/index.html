@@ -1,0 +1,129 @@
+<!-- index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<head>
+  <!-- css propios -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+
+<div class="main-banner">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 align-self-center">
+        <div class="caption header-text">
+          <h2>CONECTA CON TALENTO JOVEN</h2>
+          <p>Mas de 10,000 talentos jovenes con las competencias que tu necesitas.
+            Responde solo 3 preguntas y nestra IA hara el resto.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 offset-lg-2">
+        <div class="right-image">
+          <img src="{{ url_for('static', filename='assets/images/inicio1.png') }}" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="div-respaldado">
+  <h3>Respaldado por:</h3>
+  <div class="logos">
+    <a target="_blank" href="https://www.cofide.com.pe">
+      <img loading="lazy" src="../static/assets/images/cofide-logo.png" alt="logo-cofide" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://utecventures.com/">
+      <img loading="lazy" src="../static/assets/images/utec-logo.png" alt="logo-utec" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://www2.proinnovate.gob.pe/">
+      <img loading="lazy" src="../static/assets/images/innovate-logo.png" alt="logo-innovate" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://startupleague-kpsl.com/">
+      <img loading="lazy" src="../static/assets/images/koica-logo.png" alt="logo-koica" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://www.shift.pe">
+      <img loading="lazy" src="../static/assets/images/shift-logo.png" alt="logo-shift" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://kunan.org/">
+      <img loading="lazy" src="../static/assets/images/kunan_logo.png" alt="logo-shift" style="opacity: 1;">
+    </a>
+    <a target="_blank" href="https://www.facebook.com/incubaunt.peru/?locale=es_LA">
+      <img loading="lazy" src="../static/assets/images/incubaunt_logo.png" alt="logo-shift" style="opacity: 1;">
+    </a>
+  </div>
+</div>
+
+<section class="section-4">
+  <div class="img-feedback">
+    <img src="../static/assets/images/img-feedback.png">
+  </div>
+  <div class="div-feedback">
+    <img src="../static/assets/images/icon-feedback.png">
+    <h1>Ahorra Tiempo</h1>
+    <br>
+    <span>
+      ✓ Encuentra un único sitio para encontrar tus candidatos ideales
+    </span>
+    <br>
+    <span>
+      ✓ Podrás encontrar cientos de candidatos facilmente
+    </span>
+  </div>
+</section>
+
+
+<section class="section-5">
+  <div class="div-recomendaciones">
+    <img src="../static/assets/images/icon-recomendaciones.png">
+    <h1>Contacto</h1>
+    <br>
+    <span>
+      ✓ Facilidad en contactar con los candidatos de una manera mas eficiente.
+    </span>
+    <br>
+    <span>
+      ✓ Cientos de candidatos pueden contactarse facilmente
+    </span>
+  </div>
+  <div class="img-recomendaciones">
+    <img src="../static/assets/images/img-recomendaciones.png">
+  </div>
+</section>
+
+
+<script>
+  document.getElementById('subscribe').onsubmit = function (event) {
+    event.preventDefault(); // Previene el comportamiento por defecto del formulario
+
+    // Verifica que el correo tenga "@" y ".com"
+    var correo = document.getElementById('exampleInputEmail1').value;
+    if (correo.includes('@') && correo.includes('.com')) {
+      // Crea un objeto FormData con los datos del formulario
+      var formData = new FormData(event.target);
+
+      // Realiza la petición POST al servidor
+      fetch('/agregar_correo', {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.mensaje); // Muestra un alerta con el mensaje del servidor
+          window.location.href = '/'; // Redirecciona a la página de inicio
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    } else {
+      alert('Por favor, introduce un correo electrónico válido.');
+    }
+  };
+
+
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,52 @@
+<!-- index.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+  <!-- css propios -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carrito.css') }}">
+</head>
+
+<div class="page-heading header-text">
+</div>
+
+<br><br><br>
+
+<div class="div-respaldado">
+  <h3>Respaldado por:</h3>
+  <br>
+  <br>
+  <div class="logos">
+    <a target="_blank" href="https://www.cofide.com.pe">
+      <img loading="lazy" src="../static/assets/images/cofide-logo.png" alt="logo-cofide">
+    </a>
+    <a target="_blank" href="https://utecventures.com/">
+      <img loading="lazy" src="../static/assets/images/utec-logo.png" alt="logo-utec">
+    </a>
+    <a target="_blank" href="https://www2.proinnovate.gob.pe/">
+      <img loading="lazy" src="../static/assets/images/innovate-logo.png" alt="logo-innovate">
+    </a>
+    <a target="_blank" href="https://startupleague-kpsl.com/">
+      <img loading="lazy" src="../static/assets/images/koica-logo.png" alt="logo-koica">
+    </a>
+    <a target="_blank" href="https://www.shift.pe">
+      <img loading="lazy" src="../static/assets/images/shift-logo.png" alt="logo-shift">
+    </a>
+    <a target="_blank" href="https://kunan.org/">
+      <img loading="lazy" src="../static/assets/images/kunan_logo.png" alt="logo-shift">
+    </a>
+    <a target="_blank" href="https://www.facebook.com/incubaunt.peru/?locale=es_LA">
+      <img loading="lazy" src="../static/assets/images/incubaunt_logo.png" alt="logo-shift">
+    </a>
+  </div>
+</div>
+<br><br><br><br><br><br><br>
+
+
+<!-- scripts propios-->
+<script src="{{ url_for('static', filename='js/carrito.js') }}"></script>
+
+
+
+{% endblock %}
