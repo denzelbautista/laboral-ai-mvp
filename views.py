@@ -5,6 +5,8 @@ import requests
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 
+from auth_required import auth_required
+
 # Crea un Blueprint llamado 'views'
 views_bp = Blueprint("views", __name__)
 
@@ -74,6 +76,7 @@ def editarproducto():
 
 
 @views_bp.route("/registroproducto")
+@auth_required
 def registroproducto():
 
     token = request.cookies.get('authToken')
@@ -105,7 +108,7 @@ def profile():
 
 
 @views_bp.route("/dashboard")
-
+@auth_required
 def dashboard():
     token = request.cookies.get('authToken')
     if not token:

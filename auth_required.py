@@ -6,7 +6,7 @@ def auth_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Obtener el token desde la cookie (o header)
-        token = request.cookies.get('authToken')  # O request.headers.get('Authorization')
+        token = request.cookies.get('authToken') 
         if not token:
             return jsonify({'success': False, 'message': 'Acceso no autorizado, token no encontrado'}), 401
         
