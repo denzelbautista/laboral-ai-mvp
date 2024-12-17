@@ -1,38 +1,26 @@
 document.getElementById('register').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Previene que el formulario recargue la página
+    event.preventDefault();
 
-    const nombre = document.getElementById('nombre').value;
-    const razonSocial = document.getElementById('razon_social').value;
-    const ruc = document.getElementById('RUC').value;
-    const email = document.getElementById('correo').value;
-    const numero = document.getElementById('numero_contacto').value;
-    const password = document.getElementById('contrasena').value;
-
-    // Creamos un objeto con los datos a enviar
     const empresaData = {
-        nombre,
-        razon_social: razonSocial,
-        RUC: ruc,
-        correo: email,
-        numero_contacto: numero,
-        contrasena: password
+        nombre: document.getElementById('nombre').value,
+        razon_social: document.getElementById('razon_social').value,
+        RUC: document.getElementById('RUC').value,
+        correo: document.getElementById('correo').value,
+        numero_contacto: document.getElementById('numero_contacto').value,
+        contrasena: document.getElementById('contrasena').value
     };
 
     try {
-        // Hacer fetch al backend Flask
         const response = await fetch('/api/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(empresaData)
         });
 
         const result = await response.json();
 
         if (response.ok && result.success) {
-            localStorage.setItem('authToken', result.token);
-            window.location.href = '/dashboard';
+            window.location.href = '/dashboard'; // Redireccionar al dashboard
         } else {
             alert(result.message || 'Error en el registro.');
         }
@@ -40,3 +28,4 @@ document.getElementById('register').addEventListener('submit', async (event) => 
         console.error('Error al enviar los datos:', error);
     }
 });
+
