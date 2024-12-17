@@ -8,6 +8,8 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Establece una clave secreta para la gestión de sesiones
 app.register_blueprint(views_bp)
 
+from auth_required import auth_required
+
 # Configuración de Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -114,6 +116,7 @@ def login_user():
 
 
 @app.route('/publicar-empleo', methods=['POST'])
+@auth_required
 def publicar_empleo():
     try:
         # Obtener token desde la cookie HTTPOnly
@@ -155,72 +158,9 @@ def publicar_empleo():
 
 
 @app.route('/api/logout', methods=['POST'])
-@login_required
-def logout_user():
-    # Cerrar la sesión usando Flask-Login
-    logout_user()
-    return jsonify({'success': True, 'message': 'Sesión cerrada exitosamente'}), 200
-
-@app.route('/nuevo_empleo')
-def create_empleo():
-    return render_template('registroproducto.html')
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    # Captura de datos del formulario
-    empresa_id = request.form.get("empresa_id") #ahora con token será diferente
-    empleo_datos = {
-        "nombre_empleo": request.form.get("nombre_empleo"),
-        "tipo_contrato": request.form.get("tipo_contrato"),
-        "fecha_publicacion": request.form.get("fecha_publicacion"),
-        "fecha_final": request.form.get("fecha_final"),
-        "modalidad": request.form.get("modalidad"),
-        "ubicacion": request.form.get("ubicacion"),
-        "salario_min": int(request.form.get("salario_min")),
-        "salario_max": int(request.form.get("salario_max")),
-        "experiencia": request.form.get("experiencia"),
-        "vacantes": int(request.form.get("vacantes")),
-        "descripcion": request.form.get("descripcion"),
-        "funciones": request.form.get("funciones").split(","),
-        "requisitos": request.form.get("requisitos").split(","),
-        "beneficios": request.form.get("beneficios").split(","),
-        "nivel_estudios": request.form.get("nivel_estudios")
-    }
-
-    data = {
-        "empresa_id": empresa_id,
-        "empleo_datos": empleo_datos
-    }
-
-    # Enviar datos a la API externa
-    api_url = "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/crear"
-    headers = {"Content-Type": "application/json"}
-    response = requests.post(api_url, json=data, headers=headers)
-
-    # Mostrar la respuesta de la API
-    if response.status_code == 200:
-        return redirect(url_for('views.empleos_listar'))
-    else:
-        return jsonify({"status": "error", "message": "Error al enviar los datos", "details": response.text}), response.status_code
-
-
-@app.route('/empleos', methods=['GET'])
-def empleos():
-    empresa_id = "c2bea60b-48b6-48c8-8b23-92e1f688a5b2"
-    api_url = "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/listarporempresa"
-    headers = {"Content-Type": "application/json"}
-    data = {"empresa_id": empresa_id}
-
-
-    response = requests.post(api_url, json=data, headers=headers)
-
-    if response.status_code == 200:
-        empleos_data = response.json().get('body', '[]')
-        empleos = json.loads(empleos_data)
-    else:
-        empleos = []
-    return render_template('dashboard.html', empleos=empleos)
-
+@auth_required
+def logout_user(): 
+    pass # Esto se hará después
 
 if __name__ == '__main__':
     app.run(debug=True)
