@@ -1,3 +1,4 @@
+
 from flask import Flask, request, jsonify , render_template , Request , redirect , url_for
 from flask_login import LoginManager, login_user, logout_user, login_required
 from views import views_bp
@@ -93,7 +94,6 @@ def login_user():
             if body.get('success'):
                 token = body.get('token')
                 print(token)
-                print(body)
                 # Configurar la respuesta con la cookie HTTPOnly
                 response = jsonify({'success': True, 'message': 'Inicio de sesión exitoso'})
                 response.set_cookie(
@@ -220,6 +220,7 @@ def empleos():
     else:
         empleos = []
     return render_template('dashboard.html', empleos=empleos)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
