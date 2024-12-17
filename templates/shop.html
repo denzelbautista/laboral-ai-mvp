@@ -103,6 +103,12 @@
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <h2 class="mb-4">{{ empleo.empleo_datos.nombre_empleo }}</h2>
+                                        <button id="btn-copiar" class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Copiar">
+                                            <i class="bi bi-clipboard"></i>
+                                        </button>
+                                        <div id="mensaje" class="alert alert-success mt-3 d-none" role="alert">
+                                            ¡Texto copiado al portapapeles!
+                                        </div>
                                         <p><strong>Descripción:</strong> {{ empleo.empleo_datos.descripcion }}</p>
 
                                         <h5 class="text-primary mt-4"><i class="fas fa-tasks me-2"></i>Funciones</h5>
@@ -139,7 +145,7 @@
                                                     <p><i class="fas fa-users text-success me-2"></i><strong>Vacantes:</strong> {{ empleo.empleo_datos.vacantes }}</p>
                                                 </div>
 
-                                                <a href="/detallesempleo" class="btn btn-primary w-100">
+                                                <a href="https://forms.gle/7xBM9NnXNtJfxNTC6" class="btn btn-primary w-100">
                                                     <i class="fas fa-paper-plane me-2"></i>Postular ahora
                                                 </a>
                                             </div>
@@ -170,5 +176,19 @@
                 document.body.style.overflow = 'auto'; // Si scrooll
             }
         }
+        document.getElementById("btn-copiar").addEventListener("click", function () {
+            const texto = document.getElementById("texto-copiar").innerText;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                const mensaje = document.getElementById("mensaje");
+                mensaje.classList.remove("d-none");
+
+                setTimeout(() => {
+                    mensaje.classList.add("d-none");
+                }, 2000);
+            }).catch(err => {
+                console.error("Error al copiar el texto: ", err);
+            });
+        });
     </script>
 {% endblock %}
