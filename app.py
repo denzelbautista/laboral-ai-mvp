@@ -117,12 +117,8 @@ def login_user():
 
 @app.route('/publicar-empleo', methods=['POST'])
 @auth_required
-def publicar_empleo():
+def publicar_empleo(token):
     try:
-        # Obtener token desde la cookie HTTPOnly
-        token = request.cookies.get('authToken')
-        if not token:
-            return jsonify({"success": False, "message": "Token no encontrado en cookies"}), 401
 
         # Obtener datos del frontend
         data = request.json
