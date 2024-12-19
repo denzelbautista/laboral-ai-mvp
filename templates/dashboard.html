@@ -1,36 +1,240 @@
 {% extends "dashboard_base.html" %}
-
 {% block page_title %}Últimos Empleos Publicados{% endblock %}
-
 {% block dashboard_content %}
+    <style>
+        .btn-sm {
+            margin: 0 2px;
+        }
+
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table .btn {
+            white-space: nowrap;
+        }
+        .table-responsive {
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        .new-job-btn {
+            margin: 20px 0;
+        }
+
+        .new-job-btn a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .new-job-btn:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s;
+        }
+    </style>
     <div class="table-responsive rounded">
         <table class="table table-hover bg-light">
             <thead>
             <tr>
-                <th>Título de Puesto</th>
+                <th>Nombre de Puesto</th>
+                <th>Descripción</th>
+                <th>Ubicación</th>
                 <th>Nº de Vacantes</th>
-                <th>Fecha de Publicación</th>
                 <th>Fecha de Finalización</th>
-
+                <th>Salario</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody id="jobsTableBody">
-                {% for empleo in empleos %}
-                  <tr>
-{#                  TODO : display of the jobs is missing#}
-{#                      <td>{{ empleo['empleo_datos']['nombre_empleo'] }}</td>#}
-{#                      <td>{{ empleo['empleo_datos']['vacantes'] }}</td>#}
-{#                      <td>{{ empleo['empleo_datos']['fecha_publicacion'] }}</td>#}
-{#                      <td>{{ empleo['empleo_datos']['fecha_final'] }}</td>#}
-                  </tr>
-                {% endfor %}
+            {% for empleo in empleos %}
+                <tr>
+                    <td>{{ empleo.empleo_datos.nombre_empleo }}</td>
+                    <td>{{ empleo.empleo_datos.descripcion }}</td>
+                    <td>{{ empleo.empleo_datos.ubicacion }}</td>
+                    <td>{{ empleo.empleo_datos.vacantes }}</td>
+                    <td>{{ empleo.empleo_datos.fecha_final }}</td>
+                    <td>${{ empleo.empleo_datos.salario_min }}</td>
+                    <td>
+                        <button type="button"
+                                onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.detalle_key }}', {{ empleo.empleo_datos }})" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button type="button"
+                                onclick="eliminarEmpleo('{{ empleo.detalle_key }}')"
+                                class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
     <button class="btn btn-primary new-job-btn">
-        <a href="{{url_for('views.registroproducto')}}" class="nav-link ">
-                <i class="fas fa-plus"></i> Nuevo Empleo
+        <a href="{{url_for('views.registroproducto')}}" class="nav-link">
+            <i class="fas fa-plus"></i> Nuevo Empleo
         </a>
-
     </button>
+
+    <!-- Modal para editar empleo -->
+    <div class="modal fade" id="editarEmpleoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Empleo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarEmpleoForm">
+                        <input type="hidden" id="editDetalleKey">
+                        <div class="mb-3">
+                            <label for="editNombreEmpleo" class="form-label">Nombre del Puesto</label>
+                            <input type="text" class="form-control" id="editNombreEmpleo" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="editDescripcion" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editUbicacion" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="editUbicacion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editVacantes" class="form-label">Número de Vacantes</label>
+                            <input type="number" class="form-control" id="editVacantes" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFechaFinal" class="form-label">Fecha de Finalización</label>
+                            <input type="date" class="form-control" id="editFechaFinal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editSalarioMin" class="form-label">Salario</label>
+                            <input type="number" class="form-control" id="editSalarioMin" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+let editModal;
+
+document.addEventListener('DOMContentLoaded', function() {
+    editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
+
+    console.log('Modal inicializado:', editModal);
+});
+
+function editarEmpleo(detalleKey, empleoDatos) {
+    console.log('Editando empleo:', detalleKey, empleoDatos); // Para debuggear
+
+    try {
+        document.getElementById('editDetalleKey').value = detalleKey;
+        document.getElementById('editNombreEmpleo').value = empleoDatos.nombre_empleo;
+        document.getElementById('editDescripcion').value = empleoDatos.descripcion;
+        document.getElementById('editUbicacion').value = empleoDatos.ubicacion;
+        document.getElementById('editVacantes').value = empleoDatos.vacantes;
+
+        let fecha = empleoDatos.fecha_final;
+        if (fecha.includes('T')) {
+            fecha = fecha.split('T')[0];
+        }
+        document.getElementById('editFechaFinal').value = fecha;
+
+        document.getElementById('editSalarioMin').value = empleoDatos.salario_min;
+
+        if (editModal) {
+            editModal.show();
+        } else {
+            console.error('Modal no inicializado');
+            editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
+            editModal.show();
+        }
+    } catch (error) {
+        console.error('Error al abrir el modal:', error);
+    }
+}
+
+        async function guardarEdicion() {
+            const detalleKey = document.getElementById('editDetalleKey').value;
+            const empleoDatos = {
+                nombre_empleo: document.getElementById('editNombreEmpleo').value,
+                descripcion: document.getElementById('editDescripcion').value,
+                ubicacion: document.getElementById('editUbicacion').value,
+                vacantes: parseInt(document.getElementById('editVacantes').value),
+                fecha_final: document.getElementById('editFechaFinal').value,
+                salario_min: parseInt(document.getElementById('editSalarioMin').value)
+            };
+
+            try {
+                const response = await fetch('/empleo/editar', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        detalle_key: detalleKey,
+                        empleo_datos: empleoDatos
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Empleo actualizado exitosamente');
+                    editModal.hide();
+                    location.reload();
+                } else {
+                    alert('Error al actualizar el empleo: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error al actualizar el empleo');
+                console.error('Error:', error);
+            }
+        }
+
+        async function eliminarEmpleo(detalleKey) {
+            if (!confirm('¿Está seguro de que desea eliminar este empleo?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/empleo/eliminar', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        detalle_key: detalleKey
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.message === "Empleo eliminado con éxito") {
+                    alert('Empleo eliminado exitosamente');
+                    location.reload();
+                } else {
+                    print(data);
+                    alert('Error al eliminar el empleo');
+                }
+            } catch (error) {
+                alert('Error al eliminar el empleo');
+                console.error('Error:', error);
+            }
+        }
+    </script>
 {% endblock %}

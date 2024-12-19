@@ -158,6 +158,60 @@ def publicar_empleo(token):
 def logout_user(): 
     pass # Esto se hará después
 
+@app.route('/empleo/editar', methods=['PUT'])
+@auth_required
+def editar_empleo(token):
+    try:
+        data = request.json
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}"
+        }
+
+        # Llamada a la API Lambda
+        response = requests.put(
+            "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/modificar",
+            json=data,
+            headers=headers
+        )
+
+        return response.json(), response.status_code
+
+    except Exception as e:
+        print(f"Error en editar_empleo: {e}")
+        return jsonify({
+            "success": False,
+            "message": "Error interno del servidor"
+        }), 500
+
+@app.route('/empleo/eliminar', methods=['DELETE'])
+@auth_required
+def eliminar_empleo(token):
+    try:
+        data = request.json
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}"
+        }
+        print(headers)
+        # Llamada a la API Lambda
+        response = requests.delete(
+            "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/eliminar",
+            json=data,
+            headers=headers
+        )
+
+        return response.json(), response.status_code
+
+    except Exception as e:
+        print(f"Error en eliminar_empleo: {e}")
+        return jsonify({
+            "success": False,
+            "message": "Error interno del servidor"
+        }), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
 
