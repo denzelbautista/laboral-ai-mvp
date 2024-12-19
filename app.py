@@ -175,7 +175,7 @@ def editar_empleo(token):
             json=data,
             headers=headers
         )
-
+        print(response.json())
         return response.json(), response.status_code
 
     except Exception as e:
@@ -186,9 +186,10 @@ def editar_empleo(token):
         }), 500
 
 @app.route('/empleo/eliminar', methods=['DELETE'])
-@auth_required
-def eliminar_empleo(token):
+def eliminar_empleo():
     try:
+
+        token = request.cookies.get('authToken')
         data = request.json
 
         headers = {
@@ -197,6 +198,7 @@ def eliminar_empleo(token):
         }
         print(headers)
         # Llamada a la API Lambda
+
         response = requests.delete(
             "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/eliminar",
             json=data,
