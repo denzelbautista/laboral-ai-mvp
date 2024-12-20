@@ -102,13 +102,16 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <h2 class="mb-4">{{ empleo.empleo_datos.nombre_empleo }}</h2>
-                                        <button id="btn-copiar" class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Copiar">
-                                            <i class="bi bi-clipboard"></i>
-                                        </button>
-                                        <div id="mensaje" class="alert alert-success mt-3 d-none" role="alert">
-                                            ¡Texto copiado al portapapeles!
+                                        <div style="display: flex; justify-content: space-between; ">
+
+                                            <h2 class="mb-4">{{ empleo.empleo_datos.nombre_empleo }}</h2>
+                                            <button id="btn-copiar-{{ loop.index }}" class="btn btn-outline-secondary btn-sm"
+                                                    data-job-name="{{ empleo.empleo_datos.nombre_empleo }}"
+                                                    onclick="copiarAlPortapapeles('{{ empleo.empleo_datos.nombre_empleo }}', {{ loop.index }})">
+                                                <i class="bi bi-copy"></i> Copiar
+                                            </button>
                                         </div>
+
                                         <p><strong>Descripción:</strong> {{ empleo.empleo_datos.descripcion }}</p>
 
                                         <h5 class="text-primary mt-4"><i class="fas fa-tasks me-2"></i>Funciones</h5>
@@ -145,7 +148,7 @@
                                                     <p><i class="fas fa-users text-success me-2"></i><strong>Vacantes:</strong> {{ empleo.empleo_datos.vacantes }}</p>
                                                 </div>
 
-                                                <a href="https://forms.gle/7xBM9NnXNtJfxNTC6" class="btn btn-primary w-100">
+                                                <a href="https://forms.gle/7xBM9NnXNtJfxNTC6" target="_blank" class="btn btn-primary w-100">
                                                     <i class="fas fa-paper-plane me-2"></i>Postular ahora
                                                 </a>
                                             </div>
@@ -159,8 +162,37 @@
             </div>
         </div>
     {% endfor %}
-
+    <div class="modal fade" id="copyModal" tabindex="-1" aria-labelledby="copyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="copyModalLabel">Texto copiado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>El nombre del empleo ha sido copiado al portapapeles.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
+        function copiarAlPortapapeles(texto, index) {
+            event.stopPropagation();
+
+            navigator.clipboard.writeText(texto).then(() => {
+                const modal = new bootstrap.Modal(document.getElementById('copyModal'));
+                modal.show();
+
+                setTimeout(() => {
+                    modal.hide();
+                }, 2000);
+            }).catch(err => {
+                console.error("Error al copiar el texto: ", err);
+            });
+        }
         function toggleJobDetails(index) {
             const detailsContainer = document.getElementById(`job-details-${index}`);
             if (detailsContainer) {
@@ -176,19 +208,6 @@
                 document.body.style.overflow = 'auto'; // Si scrooll
             }
         }
-        document.getElementById("btn-copiar").addEventListener("click", function () {
-            const texto = document.getElementById("texto-copiar").innerText;
 
-            navigator.clipboard.writeText(texto).then(() => {
-                const mensaje = document.getElementById("mensaje");
-                mensaje.classList.remove("d-none");
-
-                setTimeout(() => {
-                    mensaje.classList.add("d-none");
-                }, 2000);
-            }).catch(err => {
-                console.error("Error al copiar el texto: ", err);
-            });
-        });
     </script>
 {% endblock %}
