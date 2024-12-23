@@ -1,214 +1,172 @@
-
-from flask import Flask, request, jsonify , render_template , Request , redirect , url_for
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask import Flask, request, jsonify
+from database import init_app, db
+from config.local import config
+from flask import Flask
+# flask-login
+from flask_login import LoginManager, login_required, current_user
+# end flask-login
+from datetime import datetime
+from models import Empresa, Empleo
 from views import views_bp
-import json
-import requests
-app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Establece una clave secreta para la gestión de sesiones
-app.register_blueprint(views_bp)
+from empresa_controller import empresas_bp
 
-from auth_required import auth_required
+app = Flask(__name__)
+init_app(app)
+
+app.config['SECRET_KEY'] = config['SECRET_KEY']
 
 # Configuración de Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'views.login'
 
-# Estructuras de datos en memoria para reemplazar la base de datos
-usuarios = {}
-productos = {}
-next_user_id = 1
-next_product_id = 1
-
 @login_manager.user_loader
-def load_user(user_id):
-    return usuarios.get(int(user_id))
+def load_user(empresa_id):
+    return Empresa.query.get(empresa_id)
 
-@app.route('/api/register', methods=['POST'])
-def register_user():
-    data = request.json
-    required_fields = ['nombre', 'razon_social', 'RUC', 'correo', 'numero_contacto', 'contrasena']
-    if not all(field in data for field in required_fields):
-        return jsonify({'success': False, 'message': 'Datos incompletos'}), 400
+# Para la web
 
-    lambda_payload = {
-        'correo_admin': data['correo'],
-        'contrasena_admin': data['contrasena'],
-        'ruc': data['RUC'],
-        'razon_social': data['razon_social'],
-        'empresa_datos': {
-            'nombre': data['nombre'],
-            'telefono': int(data['numero_contacto'])
-        }
-    }
+app.register_blueprint(views_bp)
+app.register_blueprint(empresas_bp)
 
-    try:
-        lambda_response = requests.post(
-            'https://cuneyfem18.execute-api.us-east-1.amazonaws.com/prod/auth/register',
-            json=lambda_payload
-        )
-        lambda_result = lambda_response.json()
-
-        if lambda_response.status_code == 200:
-            body = json.loads(lambda_result['body'])
-            if body.get('success'):
-                token = body.get('token', None)
-
-                # Configurar la respuesta con la cookie HTTPOnly
-                response = jsonify({'success': True, 'message': 'Usuario registrado'})
-                response.set_cookie(
-                    'authToken', token,
-                    httponly=True,
-                    secure=True,
-                    samesite='Strict',  # Evita envíos CSRF
-                    max_age=86400  # 24 horas
-                )
-                return response, 201
-            else:
-                return jsonify({'success': False, 'message': body.get('message', 'Error en registro')}), 400
-
-        return jsonify({'success': False, 'message': 'Error en la respuesta de Lambda'}), lambda_response.status_code
-
-    except Exception as e:
-        return jsonify({'success': False, 'message': 'Error al registrar usuario', 'error': str(e)}), 500
-
-
-@app.route('/api/login', methods=['POST'])
-def login_user():
-    data = request.json
-    required_fields = ['correo', 'contrasena']
-    if not all(field in data for field in required_fields):
-        return jsonify({'success': False, 'message': 'Datos incompletos'}), 400
-
-    lambda_payload = {
-        'correo_admin': data['correo'],
-        'contrasena_proporcionada': data['contrasena']
-    }
-
-    try:
-        lambda_response = requests.post(
-            'https://cuneyfem18.execute-api.us-east-1.amazonaws.com/prod/auth/login',
-            json=lambda_payload
-        )
-        if lambda_response.status_code == 200:
-            body = json.loads(lambda_response.json()['body'])
-            if body.get('success'):
-                token = body.get('token')
-                print(token)
-                # Configurar la respuesta con la cookie HTTPOnly
-                response = jsonify({'success': True, 'message': 'Inicio de sesión exitoso'})
-                response.set_cookie(
-                    'authToken', token,
-                    httponly=True,
-                    secure=True,
-                    samesite='Strict',
-                    max_age=86400  # 24 horas
-                )
-                return response, 200
-            else:
-                return jsonify({'success': False, 'message': body.get('message', 'Credenciales incorrectas')}), 401
-
-        return jsonify({'success': False, 'message': 'Error en la respuesta de Lambda'}), lambda_response.status_code
-
-    except Exception as e:
-        return jsonify({'success': False, 'message': 'Error al iniciar sesión', 'error': str(e)}), 500
-
-
+# Ruta para publicar un empleo
 @app.route('/publicar-empleo', methods=['POST'])
-@auth_required
-def publicar_empleo(token):
+@login_required
+def publicar_empleo():
     try:
-
-        # Obtener datos del frontend
+        # Obtener los datos del cuerpo de la solicitud
         data = request.json
-
-        # Configurar el payload y los headers para Lambda
-        lambda_payload = {
-            "empleo_datos": data
-        }
-        lambda_headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
-        }
-
-        # Reenviar la solicitud a la API Lambda
-        lambda_response = requests.post(
-            "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/crear",
-            json=lambda_payload,
-            headers=lambda_headers
-        )
-
-        # Responder según la respuesta de Lambda
-        if lambda_response.status_code == 200:
-            return jsonify({"success": True, "message": "Empleo creado exitosamente"}), 200
-        else:
+        
+        # Validar que todos los campos requeridos estén presentes
+        required_fields = ['nombre', 'fecha_final_postulacion', 'ubicacion', 'salario', 'vacantes', 'descripcion', 
+                           'funciones', 'beneficios', 'requisitos', 'tipo_contrato', 'modalidad_asistencia']
+        
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            print(data)
             return jsonify({
                 "success": False,
-                "message": lambda_response.json().get("message", "Error en Lambda")
-            }), lambda_response.status_code
+                "message": f"Faltan los siguientes campos: {', '.join(missing_fields)}"
+            }), 400
 
-    except Exception as e:
-        print(f"Error en publicar_empleo: {e}")
-        return jsonify({"success": False, "message": "Error interno del servidor"}), 500
-
-
-@app.route('/api/logout', methods=['POST'])
-@auth_required
-def logout_user(): 
-    pass # Esto se hará después
-
-@app.route('/empleo/editar', methods=['PUT'])
-@auth_required
-def editar_empleo(token):
-    try:
-        data = request.json
-
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
-        }
-
-        # Llamada a la API Lambda
-        response = requests.put(
-            "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/modificar",
-            json=data,
-            headers=headers
+        # Crear el objeto Empleo con los datos proporcionados
+        nuevo_empleo = Empleo(
+            nombre=data['nombre'],
+            fecha_creacion=datetime.now().isoformat(),
+            fecha_final_postulacion=data['fecha_final_postulacion'],
+            ubicacion=data['ubicacion'],
+            salario=data['salario'],
+            vacantes=data['vacantes'],
+            descripcion=data['descripcion'],
+            funciones=data['funciones'],
+            beneficios=data['beneficios'],
+            requisitos=data['requisitos'],
+            tipo_contrato=data['tipo_contrato'],
+            modalidad_asistencia=data['modalidad_asistencia'],
+            empresa_id=current_user.id  # La empresa_id proviene del usuario logueado
         )
-        print(response.json())
-        return response.json(), response.status_code
+
+        # Insertar el nuevo empleo en la base de datos
+        db.session.add(nuevo_empleo)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Empleo creado exitosamente",
+            "empleo_id": nuevo_empleo.id
+        }), 201
 
     except Exception as e:
-        print(f"Error en editar_empleo: {e}")
+        print(f"Error al publicar empleo: {e}")
+        db.session.rollback()
         return jsonify({
             "success": False,
             "message": "Error interno del servidor"
         }), 500
 
-@app.route('/empleo/eliminar', methods=['DELETE'])
-def eliminar_empleo():
+# Ruta para editar un empleo
+@app.route('/empleo/editar', methods=['PATCH'])
+@login_required
+def editar_empleo():
     try:
-
-        token = request.cookies.get('authToken')
+        # Obtener los datos del cuerpo de la solicitud
         data = request.json
+        empleo_id = data.get('empleo_id')
+        if not empleo_id:
+            return jsonify({
+                "success": False,
+                "message": "El campo 'empleo_id' es obligatorio"
+            }), 400
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}"
-        }
-        print(headers)
-        # Llamada a la API Lambda
+        # Buscar el empleo en la base de datos
+        empleo = Empleo.query.filter_by(id=empleo_id, empresa_id=current_user.id).first()
+        if not empleo:
+            return jsonify({
+                "success": False,
+                "message": "Empleo no encontrado o no autorizado para editar"
+            }), 404
 
-        response = requests.delete(
-            "https://azy1wlrgli.execute-api.us-east-1.amazonaws.com/prod/empleos/eliminar",
-            json=data,
-            headers=headers
-        )
+        # Actualizar los campos que se proporcionaron en la solicitud
+        editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 
+                           'funciones', 'beneficios', 'requisitos', 'tipo_contrato', 'modalidad_asistencia']
+        for field in editable_fields:
+            if field in data:
+                setattr(empleo, field, data[field])
 
-        return response.json(), response.status_code
+        # Actualizar la fecha de modificación
+        empleo.fecha_modificacion = datetime.now().isoformat()
+
+        # Guardar los cambios en la base de datos
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Empleo actualizado exitosamente",
+            "empleo_id": empleo.id
+        }), 200
 
     except Exception as e:
-        print(f"Error en eliminar_empleo: {e}")
+        print(f"Error al editar empleo: {e}")
+        db.session.rollback()
+        return jsonify({
+            "success": False,
+            "message": "Error interno del servidor"
+        }), 500
+
+# Ruta para eliminar un empleo
+@app.route('/empleo/eliminar', methods=['DELETE'])
+@login_required
+def eliminar_empleo():
+    try:
+        # Obtener los datos del cuerpo de la solicitud
+        data = request.json
+        empleo_id = data.get('empleo_id')
+        if not empleo_id:
+            return jsonify({
+                "success": False,
+                "message": "El campo 'empleo_id' es obligatorio"
+            }), 400
+
+        # Buscar el empleo en la base de datos
+        empleo = Empleo.query.filter_by(id=empleo_id, empresa_id=current_user.id).first()
+        if not empleo:
+            return jsonify({
+                "success": False,
+                "message": "Empleo no encontrado o no autorizado para eliminar"
+            }), 404
+
+        # Eliminar el empleo de la base de datos
+        db.session.delete(empleo)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Empleo eliminado exitosamente"
+        }), 200
+
+    except Exception as e:
+        print(f"Error al eliminar empleo: {e}")
+        db.session.rollback()
         return jsonify({
             "success": False,
             "message": "Error interno del servidor"
@@ -216,4 +174,5 @@ def eliminar_empleo():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 

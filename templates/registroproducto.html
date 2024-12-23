@@ -6,46 +6,72 @@
 
 {% block dashboard_content %}
 
-    <div class="main-content">
-        <h3 class="page-title">Publicar empleo</h3>
+<div class="main-content">
+    <h3 class="page-title">Publicar empleo</h3>
 
-        <form id="form-publicar-empleo">
-            <div class="form-group">
-                <label for="nombre_empleo">Nombre del empleo</label>
-                <input type="text" class="form-control" id="nombre_empleo" name="nombre_empleo" required>
-            </div>
+    <form id="form-publicar-empleo">
+        <div class="form-group">
+            <label for="nombre_empleo">Nombre del empleo</label>
+            <input type="text" class="form-control" id="nombre_empleo" name="nombre_empleo" required>
+        </div>
 
-            <div class="form-group">
-                <label for="fecha_final">Fecha de cierre</label>
-                <input type="date" class="form-control" id="fecha_final" name="fecha_final" required>
-            </div>
+        <div class="form-group">
+            <label for="fecha_final_postulacion">Fecha de cierre</label>
+            <input type="date" class="form-control" id="fecha_final_postulacion" name="fecha_final_postulacion"
+                required>
+        </div>
 
-            <div class="form-group">
-                <label for="ubicacion">Ubicación</label>
-                <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
-            </div>
+        <div class="form-group">
+            <label for="ubicacion">Ubicación</label>
+            <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+        </div>
 
-            <div class="form-group">
-                <label for="salario_min">Salario</label>
-                <input type="number" class="form-control" id="salario_min" name="salario_min" required>
-            </div>
+        <div class="form-group">
+            <label for="salario">Salario</label>
+            <input type="number" class="form-control" id="salario" name="salario" required>
+        </div>
 
-            <div class="form-group">
-                <label for="vacantes">Vacantes</label>
-                <input type="number" class="form-control" id="vacantes" name="vacantes" required>
-            </div>
+        <div class="form-group">
+            <label for="vacantes">Vacantes</label>
+            <input type="number" class="form-control" id="vacantes" name="vacantes" required>
+        </div>
 
-            <div class="form-group">
-                <label for="descripcion">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
-            </div>
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+        </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Publicar Empleo</button>
-        </form>
+        <div class="form-group">
+            <label for="funciones">Funciones</label>
+            <textarea class="form-control" id="funciones" name="funciones" required></textarea>
+        </div>
 
-    </div>
+        <div class="form-group">
+            <label for="beneficios">Beneficios</label>
+            <textarea class="form-control" id="beneficios" name="beneficios" required></textarea>
+        </div>
 
-    <!-- javascript propios -->
-    <script src="{{ url_for('static', filename='js/registroempleo.js') }}"></script>
+        <div class="form-group">
+            <label for="requisitos">Requisitos</label>
+            <textarea class="form-control" id="requisitos" name="requisitos" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_contrato">Tipo de Contrato</label>
+            <textarea class="form-control" id="tipo_contrato" name="tipo_contrato" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="modalidad">Modalidad</label>
+            <textarea class="form-control" id="modalidad_asistencia" name="modalidad_asistencia" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Publicar Empleo</button>
+    </form>
+
+</div>
+
+<!-- javascript propios -->
+<script src="{{ url_for('static', filename='js/registroempleo.js') }}"></script>
 
 {% endblock %}

@@ -2,16 +2,16 @@ document.getElementById('register').addEventListener('submit', async (event) => 
     event.preventDefault();
 
     const empresaData = {
-        nombre: document.getElementById('nombre').value,
+        nombre_empresa: document.getElementById('nombre').value,
         razon_social: document.getElementById('razon_social').value,
-        RUC: document.getElementById('RUC').value,
+        ruc: document.getElementById('RUC').value,
         correo: document.getElementById('correo').value,
         numero_contacto: document.getElementById('numero_contacto').value,
         contrasena: document.getElementById('contrasena').value
     };
 
     try {
-        const response = await fetch('/api/register', {
+        const response = await fetch('/empresas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(empresaData)

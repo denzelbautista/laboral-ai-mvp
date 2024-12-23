@@ -6,12 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Obtener los datos del formulario
         const empleoDatos = {
-            nombre_empleo: document.getElementById("nombre_empleo").value,
-            fecha_final: document.getElementById("fecha_final").value,
+            nombre: document.getElementById("nombre_empleo").value,
+            fecha_final_postulacion: document.getElementById("fecha_final_postulacion").value,
             ubicacion: document.getElementById("ubicacion").value,
-            salario_min: document.getElementById("salario_min").value,
+            salario: document.getElementById("salario").value,
             vacantes: document.getElementById("vacantes").value,
-            descripcion: document.getElementById("descripcion").value
+            descripcion: document.getElementById("descripcion").value,
+            funciones: document.getElementById("funciones").value,
+            requisitos: document.getElementById("requisitos").value,
+            beneficios: document.getElementById("beneficios").value,
+            tipo_contrato: document.getElementById("tipo_contrato").value,
+            modalidad_asistencia: document.getElementById("modalidad_asistencia").value,
         };
 
         try {
