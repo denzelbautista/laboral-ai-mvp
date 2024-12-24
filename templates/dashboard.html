@@ -81,10 +81,10 @@
                 <td>{{ empleo.ubicacion }}</td>
                 <td>{{ empleo.vacantes }}</td>
                 <td>{{ empleo.fecha_final }}</td>
-                <td>${{ empleo.salario }}</td>
+                <td>{% if empleo.salario != 'Oculto' %}${% endif %}{{ empleo.salario }}</td>
                 <td>
                     <button type="button"
-                        onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.id }}', {{ empleo }})"
+                        onclick="console.log({{ empleo }}); editarEmpleo('{{ empleo.id }}', {{ empleo }})"
                         class="btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </button>
@@ -144,6 +144,18 @@
                         <textarea class="form-control" id="editDescripcion" required></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="editFunciones" class="form-label">Funciones</label>
+                        <textarea class="form-control" id="editFunciones" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRequisitos" class="form-label">Requisitos</label>
+                        <textarea class="form-control" id="editRequisitos" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editBeneficios" class="form-label">Beneficios</label>
+                        <textarea class="form-control" id="editBeneficios" required></textarea>
+                    </div>
+                    <div class="mb-3">
                         <label for="editUbicacion" class="form-label">Ubicación</label>
                         <input type="text" class="form-control" id="editUbicacion" required>
                     </div>
@@ -157,7 +169,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="editSalarioMin" class="form-label">Salario</label>
-                        <input type="number" class="form-control" id="editSalarioMin" required>
+                        <input type="text" class="form-control" id="editSalarioMin" required>
                     </div>
                 </form>
             </div>
@@ -197,15 +209,51 @@
     </div>
 </div>
 
+<!-- edit success modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Éxito</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="successModalMessage">Empleo actualizado exitosamente</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="location.reload()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- edit error modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errorModalMessage">Error al actualizar el empleo</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    let editModal;
+    let editModal, eliminarModal, successModal, errorModal;
 
     document.addEventListener('DOMContentLoaded', function () {
         editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
-
-        console.log('Modal inicializado:', editModal);
+        eliminarModal = new bootstrap.Modal(document.getElementById('eliminarEmpleoModal'));
+        successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
     });
 
     function editarEmpleo(detalleKey, empleoDatos) {
@@ -215,6 +263,9 @@
             document.getElementById('editDetalleKey').value = detalleKey;
             document.getElementById('editNombreEmpleo').value = empleoDatos.nombre_empleo;
             document.getElementById('editDescripcion').value = empleoDatos.descripcion;
+            document.getElementById('editFunciones').value = empleoDatos.funciones;
+            document.getElementById('editRequisitos').value = empleoDatos.requisitos;
+            document.getElementById('editBeneficios').value = empleoDatos.beneficios;
             document.getElementById('editUbicacion').value = empleoDatos.ubicacion;
             document.getElementById('editVacantes').value = empleoDatos.vacantes;
 
@@ -243,12 +294,15 @@
         const empleoDatos = {
             nombre: document.getElementById('editNombreEmpleo').value,
             descripcion: document.getElementById('editDescripcion').value,
+            funciones: document.getElementById('editFunciones').value,
+            requisitos: document.getElementById('editRequisitos').value,
+            beneficios: document.getElementById('editBeneficios').value,
             ubicacion: document.getElementById('editUbicacion').value,
             vacantes: parseInt(document.getElementById('editVacantes').value),
             fecha_final: document.getElementById('editFechaFinal').value,
-            salario: parseInt(document.getElementById('editSalarioMin').value)
+            salario: document.getElementById('editSalarioMin').value
         };
-
+        console.log(empleoDatos)
         try {
             const response = await fetch('/empleo/editar', {
                 method: 'PATCH',
@@ -264,18 +318,20 @@
             const data = await response.json();
 
             if (data.success) {
-                alert('Empleo actualizado exitosamente');
                 editModal.hide();
-                location.reload();
+                document.getElementById('successModalMessage').textContent = 'Empleo actualizado exitosamente';
+                successModal.show();
             } else {
-                alert('Error al actualizar el empleo: ' + data.message);
+                document.getElementById('errorModalMessage').textContent = 'Error al actualizar el empleo: ' + data.message;
+                errorModal.show();
             }
         } catch (error) {
-            alert('Error al actualizar el empleo');
             console.error('Error:', error);
+            document.getElementById('errorModalMessage').textContent = 'Error al actualizar el empleo';
+            errorModal.show();
         }
     }
-    let eliminarModal;
+
 
     document.addEventListener('DOMContentLoaded', function () {
         editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));

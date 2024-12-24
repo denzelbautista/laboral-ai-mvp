@@ -85,10 +85,14 @@ def dashboard():
                 "id": empleo.id,
                 "nombre_empleo": empleo.nombre,
                 "descripcion": empleo.descripcion,
+                "funciones": empleo.funciones,
+                "requisitos": empleo.requisitos,
+                "beneficios": empleo.beneficios,
                 "ubicacion": empleo.ubicacion,
                 "vacantes": empleo.vacantes,
                 "fecha_final": empleo.fecha_final_postulacion,
                 "salario": empleo.salario,
+
             }
             for empleo in empleos
         ]

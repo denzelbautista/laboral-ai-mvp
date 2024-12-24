@@ -79,7 +79,7 @@
                     </div>
 
                     <p class="card-description mb-4">
-                        <strong>Salario:</strong> ${{ empleo.salario }}<br>
+                        <strong>Salario:</strong> {% if empleo.salario != 'Oculto' %}${% endif %}{{ empleo.salario }}<br>
                         <strong>Vacantes:</strong> {{ empleo.vacantes }}
                     </p>
 
@@ -154,7 +154,8 @@
                                                 {{ empleo.ubicacion }}</p>
                                             <p><i
                                                     class="fas fa-money-bill-wave text-success me-2"></i><strong>Salario:</strong>
-                                                ${{ empleo.salario }}</p>
+                                                {% if empleo.salario != 'Oculto' %}${% endif %}{{ empleo.salario }}</p>
+
                                             <p><i
                                                     class="fas fa-calendar-alt text-warning me-2"></i><strong>Publicado:</strong>
                                                 {{ empleo.fecha_creacion }}</p>

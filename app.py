@@ -92,6 +92,7 @@ def editar_empleo():
         # Obtener los datos del cuerpo de la solicitud
         data_empleos = request.json
         data = data_empleos.get('empleo_datos')
+        print(data)
         empleo_id = data_empleos.get('detalle_key')
         if not empleo_id:
             return jsonify({
@@ -108,10 +109,10 @@ def editar_empleo():
             }), 404
 
         # Actualizar los campos que se proporcionaron en la solicitud
-        editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 
-                           'fecha_final']
+        editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 'funciones', 'beneficios','requisitos','fecha_final']
         for field in editable_fields:
             if field in data:
+                print(field)
                 setattr(empleo, field, data[field])
 
         # Guardar los cambios en la base de datos
