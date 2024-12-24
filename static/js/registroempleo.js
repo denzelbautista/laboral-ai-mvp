@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("form-publicar-empleo");
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
 
     form.addEventListener("submit", async function (event) {
-        event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+        event.preventDefault();
 
-        // Obtener los datos del formulario
         const empleoDatos = {
             nombre: document.getElementById("nombre_empleo").value,
             fecha_final_postulacion: document.getElementById("fecha_final_postulacion").value,
@@ -20,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         try {
-            // Enviar datos al servidor Flask
             const response = await fetch("/publicar-empleo", {
                 method: "POST",
                 headers: {
@@ -32,14 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
             const result = await response.json();
 
             if (result.success) {
-                alert("Empleo publicado con éxito.");
+                successModal.show();
                 form.reset();
             } else {
-                alert("Error al publicar el empleo: " + result.message);
+                document.getElementById('errorMessage').textContent = "Error al publicar el empleo: " + result.message;
+                errorModal.show();
             }
         } catch (error) {
             console.error("Error al enviar los datos:", error);
-            alert("Hubo un error al enviar el formulario.");
+            document.getElementById('errorMessage').textContent = "Hubo un error al enviar el formulario.";
+            errorModal.show();
         }
     });
 });
