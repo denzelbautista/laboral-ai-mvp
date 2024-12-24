@@ -24,6 +24,9 @@ login_manager.login_view = 'views.login'
 def load_user(empresa_id):
     return Empresa.query.get(empresa_id)
 
+def current_time():
+    return datetime.now().strftime('%Y-%m-%d')
+
 # Para la web
 
 app.register_blueprint(views_bp)
@@ -52,7 +55,7 @@ def publicar_empleo():
         # Crear el objeto Empleo con los datos proporcionados
         nuevo_empleo = Empleo(
             nombre=data['nombre'],
-            fecha_creacion=datetime.now().isoformat(),
+            fecha_creacion=current_time(),
             fecha_final_postulacion=data['fecha_final_postulacion'],
             ubicacion=data['ubicacion'],
             salario=data['salario'],
