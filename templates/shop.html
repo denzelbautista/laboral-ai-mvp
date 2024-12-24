@@ -117,27 +117,30 @@
                                 <p><strong>Descripción:</strong> {{ empleo.descripcion }}</p>
 
                                 <h5 class="text-primary mt-4"><i class="fas fa-tasks me-2"></i>Funciones</h5>
-                                <ul class="list-unstyled">
-                                    {% for funcion in empleo.funciones %}
-                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>{{ funcion }}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
+{#                                <ul class="list-unstyled">#}
+{#                                    {% for funcion in empleo.funciones %}#}
+{#                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>{{ funcion }}#}
+{#                                    </li>#}
+{#                                    {% endfor %}#}
+{#                                    #}
+{#                                </ul>#}
+                                <p>{{ empleo.funciones }}</p>
 
                                 <h5 class="text-primary mt-4"><i class="fas fa-list-ul me-2"></i>Requisitos</h5>
-                                <ul class="list-unstyled">
-                                    {% for requisito in empleo.requisitos %}
-                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>{{ requisito
-                                        }}</li>
-                                    {% endfor %}
-                                </ul>
-
+{#                                <ul class="list-unstyled">#}
+{#                                    {% for requisito in empleo.requisitos %}#}
+{#                                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>{{ requisito#}
+{#                                        }}</li>#}
+{#                                    {% endfor %}#}
+{#                                </ul>#}
+                                <p>{{ empleo.requisitos }}</p>
                                 <h5 class="text-primary mt-4"><i class="fas fa-gift me-2"></i>Beneficios</h5>
-                                <ul class="list-unstyled">
-                                    {% for beneficio in empleo.beneficios %}
-                                    <li class="mb-2"><i class="fas fa-star text-warning me-2"></i>{{ beneficio }}</li>
-                                    {% endfor %}
-                                </ul>
+{#                                <ul class="list-unstyled">#}
+{#                                    {% for beneficio in empleo.beneficios %}#}
+{#                                    <li class="mb-2"><i class="fas fa-star text-warning me-2"></i>{{ beneficio }}</li>#}
+{#                                    {% endfor %}#}
+{#                                </ul>#}
+                                <p>{{ empleo.beneficios }}</p>
                             </div>
 
                             <div class="col-lg-4">
