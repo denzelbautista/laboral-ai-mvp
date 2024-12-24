@@ -77,7 +77,7 @@ def login():
     try:
         data = request.json
         correo = data.get('correo')
-        contrasena = data.get('contraseña')
+        contrasena = data.get('contrasena')
 
         if not correo or not contrasena:
             print(data)
@@ -85,7 +85,7 @@ def login():
 
         empresa = Empresa.query.filter_by(correo=correo).first()
 
-        if empresa and check_password_hash(empresa.contraseña, contraseña):
+        if empresa and check_password_hash(empresa.contrasena, contrasena):
             login_user(empresa)
             return jsonify({'success': True, 'message': 'Inicio de sesión exitoso'}), 200
         else:

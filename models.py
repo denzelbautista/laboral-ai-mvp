@@ -5,7 +5,8 @@ from datetime import datetime
 from flask_login import UserMixin
 
 def current_time():
-    return datetime.now().isoformat()
+    return datetime.now().strftime('%Y-%m-%d')
+
 
 class Empresa(UserMixin, db.Model):
     __tablename__ = 'empresas'
@@ -35,7 +36,7 @@ class Empresa(UserMixin, db.Model):
             'updated_at': self.updated_at
         }
 
-    def __init__(self, correo, cont0rasena, telefono, ruc, nombre_empresa, razon_social):
+    def __init__(self, correo, contrasena, telefono, ruc, nombre_empresa, razon_social):
         self.correo = correo
         self.contrasena = contrasena
         self.telefono = telefono

@@ -1,66 +1,68 @@
 {% extends "dashboard_base.html" %}
 {% block page_title %}Últimos Empleos Publicados{% endblock %}
 {% block dashboard_content %}
-    <style>
-        .btn-sm {
-            margin: 0 2px;
-        }
+<style>
+    .btn-sm {
+        margin: 0 2px;
+    }
 
-        .modal-dialog {
-            max-width: 500px;
-        }
+    .modal-dialog {
+        max-width: 500px;
+    }
 
-        .table td {
-            vertical-align: middle;
-        }
+    .table td {
+        vertical-align: middle;
+    }
 
-        .table .btn {
-            white-space: nowrap;
-        }
-        .table-responsive {
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
+    .table .btn {
+        white-space: nowrap;
+    }
 
-        .new-job-btn {
-            margin: 20px 0;
-        }
+    .table-responsive {
+        margin: 20px 0;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
 
-        .new-job-btn a {
-            color: white;
-            text-decoration: none;
-        }
+    .new-job-btn {
+        margin: 20px 0;
+    }
 
-        .new-job-btn:hover {
-            transform: translateY(-2px);
-            transition: transform 0.2s;
-        }
-        .modal-dialog-centered {
-            display: flex;
-            align-items: center;
-            min-height: calc(100% - 1rem);
-        }
+    .new-job-btn a {
+        color: white;
+        text-decoration: none;
+    }
 
-        .modal-content {
-            border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
+    .new-job-btn:hover {
+        transform: translateY(-2px);
+        transition: transform 0.2s;
+    }
 
-        .modal-header.bg-danger .btn-close-white {
-            filter: brightness(0) invert(1);
-        }
+    .modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 1rem);
+    }
 
-        .toast {
-            border-radius: 0.5rem;
-        }
+    .modal-content {
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
 
-        .toast-body {
-            padding: 1rem;
-        }
-    </style>
-    <div class="table-responsive rounded">
-        <table class="table table-hover bg-light">
-            <thead>
+    .modal-header.bg-danger .btn-close-white {
+        filter: brightness(0) invert(1);
+    }
+
+    .toast {
+        border-radius: 0.5rem;
+    }
+
+    .toast-body {
+        padding: 1rem;
+    }
+</style>
+<div class="table-responsive rounded">
+    <table class="table table-hover bg-light">
+        <thead>
             <tr>
                 <th>Nombre de Puesto</th>
                 <th>Descripción</th>
@@ -70,249 +72,254 @@
                 <th>Salario</th>
                 <th>Acciones</th>
             </tr>
-            </thead>
-            <tbody id="jobsTableBody">
+        </thead>
+        <tbody id="jobsTableBody">
             {% for empleo in empleos %}
-                <tr>
-                    <td>{{ empleo.empleo_datos.nombre_empleo }}</td>
-                    <td>{{ empleo.empleo_datos.descripcion }}</td>
-                    <td>{{ empleo.empleo_datos.ubicacion }}</td>
-                    <td>{{ empleo.empleo_datos.vacantes }}</td>
-                    <td>{{ empleo.empleo_datos.fecha_final }}</td>
-                    <td>${{ empleo.empleo_datos.salario_min }}</td>
-                    <td>
-                        <button type="button"
-                                onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.detalle_key }}', {{ empleo.empleo_datos }})" class="btn btn-warning btn-sm">
-                            <i class="fas fa-edit"></i> Editar
-                        </button>
-                        <button type="button"
-                                onclick="eliminarEmpleo('{{ empleo.detalle_key }}')"
-                                class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <button class="btn btn-primary new-job-btn">
-        <a href="{{url_for('views.registroproducto')}}" class="nav-link">
-            <i class="fas fa-plus"></i> Nuevo Empleo
-        </a>
-    </button>
-    <!-- Modal para confirmar eliminacion -->
-    <div class="modal fade" id="eliminarEmpleoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Confirmar Eliminación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-0">¿Está seguro que desea eliminar este empleo? Esta acción no se puede deshacer.</p>
-                    <input type="hidden" id="deleteDetalleKey">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" onclick="confirmarEliminacion()">
-                        <i class="fas fa-trash me-2"></i>Eliminar
+            <tr>
+                <td>{{ empleo.nombre_empleo}}</td>
+                <td>{{ empleo.descripcion}}</td>
+                <td>{{ empleo.ubicacion}}</td>
+                <td>{{ empleo.vacantes}}</td>
+                <td>{{ empleo.fecha_final}}</td>
+                <td>${{ empleo.salario}}</td>
+                <td>
+                    <button type="button"
+                        onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.detalle_key }}', {{ empleo.empleo_datos }})"
+                        class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editar
                     </button>
-                </div>
+                    <button type="button" onclick="eliminarEmpleo('{{ empleo.detalle_key }}')"
+                        class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button class="btn btn-primary new-job-btn">
+    <a href="{{url_for('views.registroproducto')}}" class="nav-link">
+        <i class="fas fa-plus"></i> Nuevo Empleo
+    </a>
+</button>
+<!-- Modal para confirmar eliminacion -->
+<div class="modal fade" id="eliminarEmpleoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">¿Está seguro que desea eliminar este empleo? Esta acción no se puede deshacer.</p>
+                <input type="hidden" id="deleteDetalleKey">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="confirmarEliminacion()">
+                    <i class="fas fa-trash me-2"></i>Eliminar
+                </button>
             </div>
         </div>
     </div>
-    <!-- Modal para editar empleo -->
-    <div class="modal fade" id="editarEmpleoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Empleo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editarEmpleoForm">
-                        <input type="hidden" id="editDetalleKey">
-                        <div class="mb-3">
-                            <label for="editNombreEmpleo" class="form-label">Nombre del Puesto</label>
-                            <input type="text" class="form-control" id="editNombreEmpleo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editDescripcion" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="editDescripcion" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editUbicacion" class="form-label">Ubicación</label>
-                            <input type="text" class="form-control" id="editUbicacion" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editVacantes" class="form-label">Número de Vacantes</label>
-                            <input type="number" class="form-control" id="editVacantes" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editFechaFinal" class="form-label">Fecha de Finalización</label>
-                            <input type="date" class="form-control" id="editFechaFinal" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editSalarioMin" class="form-label">Salario</label>
-                            <input type="number" class="form-control" id="editSalarioMin" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
-                </div>
+</div>
+<!-- Modal para editar empleo -->
+<div class="modal fade" id="editarEmpleoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Empleo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editarEmpleoForm">
+                    <input type="hidden" id="editDetalleKey">
+                    <div class="mb-3">
+                        <label for="editNombreEmpleo" class="form-label">Nombre del Puesto</label>
+                        <input type="text" class="form-control" id="editNombreEmpleo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="editDescripcion" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUbicacion" class="form-label">Ubicación</label>
+                        <input type="text" class="form-control" id="editUbicacion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editVacantes" class="form-label">Número de Vacantes</label>
+                        <input type="number" class="form-control" id="editVacantes" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFechaFinal" class="form-label">Fecha de Finalización</label>
+                        <input type="date" class="form-control" id="editFechaFinal" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSalarioMin" class="form-label">Salario</label>
+                        <input type="number" class="form-control" id="editSalarioMin" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarEdicion()">Guardar Cambios</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- exito -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastMessage">
-                    Operación exitosa
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+<!-- exito -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">
+                Operación exitosa
             </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
+</div>
 
-    <!-- error -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="errorToastMessage">
-                    Error en la operación
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+<!-- error -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert"
+        aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="errorToastMessage">
+                Error en la operación
             </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                aria-label="Close"></button>
         </div>
     </div>
+</div>
 
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-let editModal;
+    let editModal;
 
-document.addEventListener('DOMContentLoaded', function() {
-    editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
+    document.addEventListener('DOMContentLoaded', function () {
+        editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
 
-    console.log('Modal inicializado:', editModal);
-});
+        console.log('Modal inicializado:', editModal);
+    });
 
-function editarEmpleo(detalleKey, empleoDatos) {
-    console.log('Editando empleo:', detalleKey, empleoDatos); // Para debuggear
+    function editarEmpleo(detalleKey, empleoDatos) {
+        console.log('Editando empleo:', detalleKey, empleoDatos); // Para debuggear
 
-    try {
-        document.getElementById('editDetalleKey').value = detalleKey;
-        document.getElementById('editNombreEmpleo').value = empleoDatos.nombre_empleo;
-        document.getElementById('editDescripcion').value = empleoDatos.descripcion;
-        document.getElementById('editUbicacion').value = empleoDatos.ubicacion;
-        document.getElementById('editVacantes').value = empleoDatos.vacantes;
+        try {
+            document.getElementById('editDetalleKey').value = detalleKey;
+            document.getElementById('editNombreEmpleo').value = empleoDatos.nombre_empleo;
+            document.getElementById('editDescripcion').value = empleoDatos.descripcion;
+            document.getElementById('editUbicacion').value = empleoDatos.ubicacion;
+            document.getElementById('editVacantes').value = empleoDatos.vacantes;
 
-        let fecha = empleoDatos.fecha_final;
-        if (fecha.includes('T')) {
-            fecha = fecha.split('T')[0];
-        }
-        document.getElementById('editFechaFinal').value = fecha;
-
-        document.getElementById('editSalarioMin').value = empleoDatos.salario_min;
-
-        if (editModal) {
-            editModal.show();
-        } else {
-            console.error('Modal no inicializado');
-            editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
-            editModal.show();
-        }
-    } catch (error) {
-        console.error('Error al abrir el modal:', error);
-    }
-}
-
-        async function guardarEdicion() {
-            const detalleKey = document.getElementById('editDetalleKey').value;
-            const empleoDatos = {
-                nombre_empleo: document.getElementById('editNombreEmpleo').value,
-                descripcion: document.getElementById('editDescripcion').value,
-                ubicacion: document.getElementById('editUbicacion').value,
-                vacantes: parseInt(document.getElementById('editVacantes').value),
-                fecha_final: document.getElementById('editFechaFinal').value,
-                salario_min: parseInt(document.getElementById('editSalarioMin').value)
-            };
-
-            try {
-                const response = await fetch('/empleo/editar', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        detalle_key: detalleKey,
-                        empleo_datos: empleoDatos
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert('Empleo actualizado exitosamente');
-                    editModal.hide();
-                    location.reload();
-                } else {
-                    alert('Error al actualizar el empleo: ' + data.message);
-                }
-            } catch (error) {
-                alert('Error al actualizar el empleo');
-                console.error('Error:', error);
+            let fecha = empleoDatos.fecha_final;
+            if (fecha.includes('T')) {
+                fecha = fecha.split('T')[0];
             }
+            document.getElementById('editFechaFinal').value = fecha;
+
+            document.getElementById('editSalarioMin').value = empleoDatos.salario_min;
+
+            if (editModal) {
+                editModal.show();
+            } else {
+                console.error('Modal no inicializado');
+                editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
+                editModal.show();
+            }
+        } catch (error) {
+            console.error('Error al abrir el modal:', error);
         }
-        let eliminarModal;
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
-            eliminarModal = new bootstrap.Modal(document.getElementById('eliminarEmpleoModal'));
-        });
-        function eliminarEmpleo(detalleKey) {
-            document.getElementById('deleteDetalleKey').value = detalleKey;
-            eliminarModal.show();
+    async function guardarEdicion() {
+        const detalleKey = document.getElementById('editDetalleKey').value;
+        const empleoDatos = {
+            nombre_empleo: document.getElementById('editNombreEmpleo').value,
+            descripcion: document.getElementById('editDescripcion').value,
+            ubicacion: document.getElementById('editUbicacion').value,
+            vacantes: parseInt(document.getElementById('editVacantes').value),
+            fecha_final: document.getElementById('editFechaFinal').value,
+            salario_min: parseInt(document.getElementById('editSalarioMin').value)
+        };
+
+        try {
+            const response = await fetch('/empleo/editar', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    detalle_key: detalleKey,
+                    empleo_datos: empleoDatos
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Empleo actualizado exitosamente');
+                editModal.hide();
+                location.reload();
+            } else {
+                alert('Error al actualizar el empleo: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error al actualizar el empleo');
+            console.error('Error:', error);
         }
-        async function confirmarEliminacion() {
-            const detalleKey = document.getElementById('deleteDetalleKey').value;
+    }
+    let eliminarModal;
 
-            try {
-                const response = await fetch('/empleo/eliminar', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        detalle_key: detalleKey
-                    })
-                });
+    document.addEventListener('DOMContentLoaded', function () {
+        editModal = new bootstrap.Modal(document.getElementById('editarEmpleoModal'));
+        eliminarModal = new bootstrap.Modal(document.getElementById('eliminarEmpleoModal'));
+    });
+    function eliminarEmpleo(detalleKey) {
+        document.getElementById('deleteDetalleKey').value = detalleKey;
+        eliminarModal.show();
+    }
+    async function confirmarEliminacion() {
+        const detalleKey = document.getElementById('deleteDetalleKey').value;
 
-                const data = await response.json();
+        try {
+            const response = await fetch('/empleo/eliminar', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    detalle_key: detalleKey
+                })
+            });
 
-                if (data.message === "Empleo eliminado con éxito") {
-                    const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                    document.getElementById('toastMessage').textContent = 'Empleo eliminado exitosamente';
-                    toast.show();
+            const data = await response.json();
 
-                    eliminarModal.hide();
-                    location.reload();
-                } else {
-                    const toast = new bootstrap.Toast(document.getElementById('errorToast'));
-                    document.getElementById('errorToastMessage').textContent = 'Error al eliminar el empleo';
-                    toast.show();
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (data.message === "Empleo eliminado con éxito") {
+                const toast = new bootstrap.Toast(document.getElementById('successToast'));
+                document.getElementById('toastMessage').textContent = 'Empleo eliminado exitosamente';
+                toast.show();
+
+                eliminarModal.hide();
+                location.reload();
+            } else {
                 const toast = new bootstrap.Toast(document.getElementById('errorToast'));
                 document.getElementById('errorToastMessage').textContent = 'Error al eliminar el empleo';
                 toast.show();
             }
+        } catch (error) {
+            console.error('Error:', error);
+            const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+            document.getElementById('errorToastMessage').textContent = 'Error al eliminar el empleo';
+            toast.show();
         }
-    </script>
+    }
+</script>
 {% endblock %}

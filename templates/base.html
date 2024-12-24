@@ -87,37 +87,45 @@
             <!-- ***** Logo End ***** -->
             <!-- ***** Menu Start ***** -->
             <ul class="nav">
-                <li>
-                    <a href="{{ url_for('views.index') }}" class="{{ 'active' if request.endpoint == 'views.index' else '' }}">Inicio</a>
-                </li>
+              <li>
+                <a href="{{ url_for('views.index') }}"
+                  class="{{ 'active' if request.endpoint == 'views.index' else '' }}">Inicio</a>
+              </li>
 
-                {% if current_user.is_authenticated %}
-                <li>
-                    <a href="{{ url_for('views.misproductos') }}" class="{{ 'active' if request.endpoint == 'views.misproductos' else '' }}">Mis Productos</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('views.registroproducto') }}" class="{{ 'active' if request.endpoint == 'views.registroproducto' else '' }}">Añadir Producto</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('views.profile') }}" class="{{ 'active' if request.endpoint == 'views.profile' else '' }}">Mi Perfil</a>
-                </li>
-                <li>
-                    <a href="#" id="logout-button">Cerrar sesión</a>
-                </li>
-                {% else %}
-                <li>
-                    <a href="{{ url_for('views.shop') }}" class="{{ 'active' if request.endpoint == 'views.shop' else '' }}">Ofertas Laborales</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('views.carrito') }}" class="{{ 'active' if request.endpoint == 'views.carrito' else '' }}">Empresas Aliadas</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('views.register') }}" class="{{ 'active' if request.endpoint == 'views.register' else '' }}">Regístrate</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('views.login') }}" class="{{ 'active' if request.endpoint == 'views.login' else '' }}">Inicia sesión</a>
-                </li>
-                {% endif %}
+              {% if current_user.is_authenticated %}
+              <li>
+                <a href="{{ url_for('views.dashboard') }}"
+                  class="{{ 'active' if request.endpoint == 'views.dashboard' else '' }}">Dashboard</a>
+              </li>
+              <li>
+                <a href="{{ url_for('views.registroproducto') }}"
+                  class="{{ 'active' if request.endpoint == 'views.registroproducto' else '' }}">Crear Empleo</a>
+              </li>
+              <li>
+                <a href="{{ url_for('views.registroproducto') }}"
+                  class="{{ 'active' if request.endpoint == 'views.registroproducto' else '' }}">Mi Perfil</a>
+              </li>
+              <li>
+                <a id="logoutButton">Cerrar sesión</a>
+              </li>
+              {% else %}
+              <li>
+                <a href="{{ url_for('views.shop') }}"
+                  class="{{ 'active' if request.endpoint == 'views.shop' else '' }}">Ofertas Laborales</a>
+              </li>
+              <li>
+                <a href="{{ url_for('views.carrito') }}"
+                  class="{{ 'active' if request.endpoint == 'views.carrito' else '' }}">Empresas Aliadas</a>
+              </li>
+              <li>
+                <a href="{{ url_for('views.register') }}"
+                  class="{{ 'active' if request.endpoint == 'views.register' else '' }}">Regístrate</a>
+              </li>
+              <li>
+                <a href="{{ url_for('views.login') }}"
+                  class="{{ 'active' if request.endpoint == 'views.login' else '' }}">Inicia sesión</a>
+              </li>
+              {% endif %}
             </ul>
             <a class="menu-trigger">
               <span>Menu</span>

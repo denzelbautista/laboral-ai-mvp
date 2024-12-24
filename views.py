@@ -77,12 +77,12 @@ def dashboard():
         empleos_list = [
             {
                 "id": empleo.id,
-                "titulo": empleo.titulo,
+                "nombre_empleo": empleo.nombre,
                 "descripcion": empleo.descripcion,
-                "categoria": empleo.categoria,
+                "ubicacion": empleo.ubicacion,
+                "vacantes": empleo.vacantes,
+                "fecha_final": empleo.fecha_final_postulacion,
                 "salario": empleo.salario,
-                "fecha_publicacion": empleo.fecha_publicacion,
-                "empresa_id": empleo.empresa_id,
             }
             for empleo in empleos
         ]
