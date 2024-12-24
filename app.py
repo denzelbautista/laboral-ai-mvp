@@ -90,8 +90,9 @@ def publicar_empleo():
 def editar_empleo():
     try:
         # Obtener los datos del cuerpo de la solicitud
-        data = request.json
-        empleo_id = data.get('empleo_id')
+        data_empleos = request.json
+        data = data_empleos.get('empleo_datos')
+        empleo_id = data_empleos.get('detalle_key')
         if not empleo_id:
             return jsonify({
                 "success": False,
@@ -108,13 +109,10 @@ def editar_empleo():
 
         # Actualizar los campos que se proporcionaron en la solicitud
         editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 
-                           'funciones', 'beneficios', 'requisitos', 'tipo_contrato', 'modalidad_asistencia']
+                           'fecha_final']
         for field in editable_fields:
             if field in data:
                 setattr(empleo, field, data[field])
-
-        # Actualizar la fecha de modificación
-        empleo.fecha_modificacion = datetime.now().isoformat()
 
         # Guardar los cambios en la base de datos
         db.session.commit()
@@ -140,7 +138,7 @@ def eliminar_empleo():
     try:
         # Obtener los datos del cuerpo de la solicitud
         data = request.json
-        empleo_id = data.get('empleo_id')
+        empleo_id = data.get('detalle_key')
         if not empleo_id:
             return jsonify({
                 "success": False,

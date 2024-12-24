@@ -27,11 +27,17 @@ def shop():
         empleos_list = [
             {
                 "id": empleo.id,
-                "titulo": empleo.titulo,
+                "nombre_empleo": empleo.nombre,
                 "descripcion": empleo.descripcion,
-                "categoria": empleo.categoria,
+                "funciones": empleo.funciones,
+                "requisitos": empleo.requisitos,
+                "beneficios": empleo.beneficios,
+                "ubicacion": empleo.ubicacion,
+                "fecha_creacion": empleo.fecha_creacion,
+                "vacantes": empleo.vacantes,
+                "fecha_final": empleo.fecha_final_postulacion,
                 "salario": empleo.salario,
-                "fecha_publicacion": empleo.fecha_publicacion,
+                "id": empleo.id,  
                 "empresa_id": empleo.empresa_id,
             }
             for empleo in empleos

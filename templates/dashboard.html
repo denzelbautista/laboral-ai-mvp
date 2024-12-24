@@ -76,20 +76,19 @@
         <tbody id="jobsTableBody">
             {% for empleo in empleos %}
             <tr>
-                <td>{{ empleo.nombre_empleo}}</td>
-                <td>{{ empleo.descripcion}}</td>
-                <td>{{ empleo.ubicacion}}</td>
-                <td>{{ empleo.vacantes}}</td>
-                <td>{{ empleo.fecha_final}}</td>
-                <td>${{ empleo.salario}}</td>
+                <td>{{ empleo.nombre_empleo }}</td>
+                <td>{{ empleo.descripcion }}</td>
+                <td>{{ empleo.ubicacion }}</td>
+                <td>{{ empleo.vacantes }}</td>
+                <td>{{ empleo.fecha_final }}</td>
+                <td>${{ empleo.salario }}</td>
                 <td>
                     <button type="button"
-                        onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.detalle_key }}', {{ empleo.empleo_datos }})"
+                        onclick="console.log('Click en editar'); editarEmpleo('{{ empleo.id }}', {{ empleo }})"
                         class="btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </button>
-                    <button type="button" onclick="eliminarEmpleo('{{ empleo.detalle_key }}')"
-                        class="btn btn-danger btn-sm">
+                    <button type="button" onclick="eliminarEmpleo('{{ empleo.id }}')" class="btn btn-danger btn-sm">
                         <i class="fas fa-trash"></i> Eliminar
                     </button>
                 </td>
@@ -225,7 +224,7 @@
             }
             document.getElementById('editFechaFinal').value = fecha;
 
-            document.getElementById('editSalarioMin').value = empleoDatos.salario_min;
+            document.getElementById('editSalarioMin').value = empleoDatos.salario;
 
             if (editModal) {
                 editModal.show();
@@ -242,17 +241,17 @@
     async function guardarEdicion() {
         const detalleKey = document.getElementById('editDetalleKey').value;
         const empleoDatos = {
-            nombre_empleo: document.getElementById('editNombreEmpleo').value,
+            nombre: document.getElementById('editNombreEmpleo').value,
             descripcion: document.getElementById('editDescripcion').value,
             ubicacion: document.getElementById('editUbicacion').value,
             vacantes: parseInt(document.getElementById('editVacantes').value),
             fecha_final: document.getElementById('editFechaFinal').value,
-            salario_min: parseInt(document.getElementById('editSalarioMin').value)
+            salario: parseInt(document.getElementById('editSalarioMin').value)
         };
 
         try {
             const response = await fetch('/empleo/editar', {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -302,7 +301,7 @@
 
             const data = await response.json();
 
-            if (data.message === "Empleo eliminado con éxito") {
+            if (data.message === "Empleo eliminado exitosamente") {
                 const toast = new bootstrap.Toast(document.getElementById('successToast'));
                 document.getElementById('toastMessage').textContent = 'Empleo eliminado exitosamente';
                 toast.show();
