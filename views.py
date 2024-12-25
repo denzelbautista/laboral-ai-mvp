@@ -1,5 +1,5 @@
 # views.py
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import current_user, login_required
 from models import Empleo, Empresa
 
@@ -103,6 +103,11 @@ def dashboard():
     except Exception as e:
         print(f"Error al cargar dashboard: {e}")
         return redirect(url_for("views.error"))
+
+@views_bp.route('/detallesempleo')
+def detallesproducto():
+    empleo_id = request.args.get('id')
+    return render_template('detallesempleo.html', empleo_id=empleo_id)
 
 
 # ///////////////////////////////////

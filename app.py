@@ -135,6 +135,34 @@ def editar_empleo():
             "message": "Error interno del servidor"
         }), 500
 
+# Empleo por id
+@app.route('/empleos/<id>', methods=['GET'])
+def get_empleo(id):
+    try:
+        empleo = Empleo.query.get(id)
+        if empleo:
+            empleo_data = {
+                'id': empleo.id,
+                'nombre': empleo.nombre,
+                'descripcion': empleo.descripcion,
+                'salario': empleo.salario,
+                'vacantes': empleo.vacantes,
+                'fecha_creacion': empleo.fecha_creacion,
+                'fecha_final_postulacion': empleo.fecha_final_postulacion,
+                'ubicacion': empleo.ubicacion,
+                'funciones': empleo.funciones,
+                'beneficios': empleo.beneficios,
+                'requisitos': empleo.requisitos,
+                'tipo_contrato': empleo.tipo_contrato,
+                'modalidad_asistencia': empleo.modalidad_asistencia
+            }
+            return jsonify({'success': True, 'empleo': empleo_data}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Empleo no encontrado'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'Error obteniendo empleo'}), 500
+
+
 # Ruta para eliminar un empleo
 @app.route('/empleo/eliminar', methods=['DELETE'])
 @login_required
