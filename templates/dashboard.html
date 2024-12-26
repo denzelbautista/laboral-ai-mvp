@@ -84,7 +84,7 @@
                 <td>{{ empleo.ubicacion }}</td>
                 <td>{{ empleo.vacantes }}</td>
                 <td>{{ empleo.fecha_final }}</td>
-                <td>{% if empleo.salario != 'Oculto' %}${% endif %}{{ empleo.salario }}</td>
+                <td>{% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario }}</td>
                 <td>{{ empleo.tipo_contrato | replace('_', ' ') | title }}</td>
                 <td>{{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</td>
                 <td>
@@ -178,8 +178,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="editTipoContrato" class="form-label">Tipo de Contrato</label>
-                        <select class="form-control" id="editTipoContrato"  required>
-                            <option value="">Seleccione una opción</option>
+                        <select class="form-control" id="editTipoContrato" required>
+                            <option value="" disabled selected hidden>Seleccione una opción</option>
                             <option value="tiempo_completo">Tiempo completo</option>
                             <option value="medio_tiempo">Medio tiempo</option>
                             <option value="por_proyecto">Por proyecto</option>
@@ -193,8 +193,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="editModalidad" class="form-label">Modalidad</label>
-                        <select class="form-control" id="editModalidad"  required>
-                            <option value="">Seleccione una opción</option>
+                        <select class="form-control" id="editModalidad" required>
+                            <option value="" disabled selected hidden>Seleccione una opción</option>
                             <option value="remoto">Remoto</option>
                             <option value="presencial">Presencial</option>
                             <option value="hibrido">Híbrido</option>
@@ -245,13 +245,15 @@
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title">Éxito</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p id="successModalMessage">Empleo actualizado exitosamente</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="location.reload()">Aceptar</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                    onclick="location.reload()">Aceptar</button>
             </div>
         </div>
     </div>
@@ -263,7 +265,8 @@
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title">Error</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p id="errorModalMessage">Error al actualizar el empleo</p>

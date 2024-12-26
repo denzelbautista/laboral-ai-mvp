@@ -79,7 +79,7 @@
                     </div>
 
                     <p class="card-description mb-4">
-                        <strong>Salario:</strong> {% if empleo.salario != 'Oculto' %}S/{% endif %}{{ empleo.salario
+                        <strong>Salario:</strong> {% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario
                         }}<br>
                         <strong>Vacantes:</strong> {{ empleo.vacantes }}
                     </p>
@@ -114,11 +114,12 @@
                                     <h2 class="mb-4">{{ empleo.nombre_empleo }}</h2>
                                     <div>
 
-                                        <button id="btn-ir-empleo-{{ loop.index }}" class="btn btn-outline-secondary btn-sm"
-                                            data-job-id="{{ empleo.id }}">
+                                        <button id="btn-ir-empleo-{{ loop.index }}"
+                                            class="btn btn-outline-secondary btn-sm" data-job-id="{{ empleo.id }}">
                                             <i class="bi bi-copy"></i> Ir a Empleo
                                         </button>
-                                        <button id="btn-copiar-{{ loop.index }}" class="btn btn-outline-secondary btn-sm"
+                                        <button id="btn-copiar-{{ loop.index }}"
+                                            class="btn btn-outline-secondary btn-sm"
                                             data-job-name="{{ empleo.nombre_empleo }}"
                                             onclick="copiarAlPortapapeles('{{ empleo.nombre_empleo }}', {{ loop.index }})">
                                             <i class="bi bi-copy"></i> Copiar
@@ -128,8 +129,10 @@
                                 </div>
 
                                 <p><strong>Descripción:</strong> {{ empleo.descripcion }}</p>
-                                <p><strong>Tipo de Contrato:</strong> {{ empleo.tipo_contrato | replace('_', ' ') | title }}</p>
-                                <p><strong>Modalidad:</strong> {{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</p>
+                                <p><strong>Tipo de Contrato:</strong> {{ empleo.tipo_contrato | replace('_', ' ') |
+                                    title }}</p>
+                                <p><strong>Modalidad:</strong> {{ empleo.modalidad_asistencia | replace('_', ' ') |
+                                    title }}</p>
                                 <h5 class="text-primary mt-4"><i class="fas fa-tasks me-2"></i>Funciones</h5>
                                 {# <ul class="list-unstyled">#}
                                     {# {% for funcion in empleo.funciones %}#}
