@@ -115,14 +115,14 @@
                                     <div>
 
                                         <button id="btn-ir-empleo-{{ loop.index }}"
-                                            class="btn btn-outline-secondary btn-sm" data-job-id="{{ empleo.id }}">
-                                            <i class="bi bi-copy"></i> Ir a Empleo
+                                            class="btn btn-outline-secondary2 btn-sm" data-job-id="{{ empleo.id }}">
+                                            <i class="bi bi-goto"></i> Ir a Empleo
                                         </button>
                                         <button id="btn-copiar-{{ loop.index }}"
                                             class="btn btn-outline-secondary btn-sm"
                                             data-job-name="{{ empleo.nombre_empleo }}"
                                             onclick="copiarAlPortapapeles('{{ empleo.nombre_empleo }}', {{ loop.index }})">
-                                            <i class="bi bi-copy"></i> Copiar
+                                            <i class="bi bi-copy"></i> Copiar nombre empleo
                                         </button>
                                     </div>
 
@@ -217,7 +217,7 @@
     </div>
 </div>
 <script>
-    document.querySelectorAll('.btn-outline-secondary').forEach(button => {
+    document.querySelectorAll('.btn-outline-secondary2').forEach(button => {
         button.addEventListener('click', function () {
             const jobId = this.getAttribute('data-job-id');
             window.location.href = `/detallesempleo?id=${jobId}`;
