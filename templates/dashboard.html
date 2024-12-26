@@ -59,6 +59,10 @@
     .toast-body {
         padding: 1rem;
     }
+    .table .btn {
+        margin-right: 4px;
+        margin-bottom: 4px;
+    }
 </style>
 <div class="table-responsive rounded">
     <table class="table table-hover bg-light">
@@ -88,9 +92,13 @@
                 <td>{{ empleo.tipo_contrato | replace('_', ' ') | title }}</td>
                 <td>{{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</td>
                 <td>
-                    <button type="button"
-                        onclick="console.log({{ empleo }}); editarEmpleo('{{ empleo.id }}', {{ empleo }})"
-                        class="btn btn-warning btn-sm">
+                    <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-briefcase"></i> Empleo
+                    </a>
+                    <button type="button" onclick="copiarEnlace('{{ empleo.id }}')" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button type="button" onclick="editarEmpleo('{{ empleo.id }}', {{ empleo }})" class="btn btn-warning btn-sm">
                         <i class="fas fa-edit"></i> Editar
                     </button>
                     <button type="button" onclick="eliminarEmpleo('{{ empleo.id }}')" class="btn btn-danger btn-sm">
@@ -414,5 +422,19 @@
             toast.show();
         }
     }
+    function copiarEnlace(empleoId) {
+    const url = `${window.location.origin}/detallesempleo?id=${empleoId}`;
+    navigator.clipboard.writeText(url).then(() => {
+        // Mostrar toast de éxito
+        const toast = new bootstrap.Toast(document.getElementById('successToast'));
+        document.getElementById('toastMessage').textContent = 'Enlace copiado al portapapeles';
+        toast.show();
+    }).catch(err => {
+        // Mostrar toast de error
+        const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+        document.getElementById('errorToastMessage').textContent = 'Error al copiar el enlace';
+        toast.show();
+    });
+}
 </script>
 {% endblock %}
