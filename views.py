@@ -29,6 +29,8 @@ def shop():
                 "id": empleo.id,
                 "nombre_empleo": empleo.nombre,
                 "descripcion": empleo.descripcion,
+                "modalidad_asistencia": empleo.modalidad_asistencia,
+                "tipo_contrato": empleo.tipo_contrato,
                 "funciones": empleo.funciones,
                 "requisitos": empleo.requisitos,
                 "beneficios": empleo.beneficios,
@@ -92,6 +94,8 @@ def dashboard():
                 "vacantes": empleo.vacantes,
                 "fecha_final": empleo.fecha_final_postulacion,
                 "salario": empleo.salario,
+                "tipo_contrato": empleo.tipo_contrato,
+                "modalidad_asistencia": empleo.modalidad_asistencia,
 
             }
             for empleo in empleos

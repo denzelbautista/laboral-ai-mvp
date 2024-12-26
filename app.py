@@ -112,7 +112,7 @@ def editar_empleo():
             }), 404
 
         # Actualizar los campos que se proporcionaron en la solicitud
-        editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 'funciones', 'beneficios','requisitos','fecha_final_postulacion']
+        editable_fields = ['nombre', 'ubicacion', 'salario', 'vacantes', 'descripcion', 'funciones', 'beneficios','requisitos','fecha_final_postulacion', 'tipo_contrato', 'modalidad_asistencia']
         for field in editable_fields:
             if field in data:
                 print(field)

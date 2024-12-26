@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="general-description-job card shadow-sm">
                             <div class="card-body">
                                 <p><strong>Descripción:</strong> ${empleo.descripcion}</p>
+                                <p><strong>Tipo de Contrato:</strong> ${empleo.tipo_contrato.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
+                                <p><strong>Modalidad:</strong> ${empleo.modalidad_asistencia.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
                                 <h5>Requisitos:</h5>
                                 <p>${empleo.requisitos || "No especificados"}</p> <!-- Manejar como texto -->
                                 <h5>Beneficios:</h5>

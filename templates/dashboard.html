@@ -70,7 +70,10 @@
                 <th>Nº de Vacantes</th>
                 <th>Fecha de Finalización</th>
                 <th>Salario</th>
+                <th>Tipo de Contrato</th>
+                <th>Modalidad</th>
                 <th>Acciones</th>
+
             </tr>
         </thead>
         <tbody id="jobsTableBody">
@@ -82,6 +85,8 @@
                 <td>{{ empleo.vacantes }}</td>
                 <td>{{ empleo.fecha_final }}</td>
                 <td>{% if empleo.salario != 'Oculto' %}${% endif %}{{ empleo.salario }}</td>
+                <td>{{ empleo.tipo_contrato | replace('_', ' ') | title }}</td>
+                <td>{{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</td>
                 <td>
                     <button type="button"
                         onclick="console.log({{ empleo }}); editarEmpleo('{{ empleo.id }}', {{ empleo }})"
@@ -170,6 +175,31 @@
                     <div class="mb-3">
                         <label for="editSalarioMin" class="form-label">Salario</label>
                         <input type="text" class="form-control" id="editSalarioMin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTipoContrato" class="form-label">Tipo de Contrato</label>
+                        <select class="form-control" id="editTipoContrato"  required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="tiempo_completo">Tiempo completo</option>
+                            <option value="medio_tiempo">Medio tiempo</option>
+                            <option value="por_proyecto">Por proyecto</option>
+                            <option value="freelance">Freelance</option>
+                            <option value="por_horarios">Por horarios</option>
+                            <option value="practicante">Practicante</option>
+                            <option value="pasante">Pasante</option>
+                            <option value="temporal">Temporal</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editModalidad" class="form-label">Modalidad</label>
+                        <select class="form-control" id="editModalidad"  required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="remoto">Remoto</option>
+                            <option value="presencial">Presencial</option>
+                            <option value="hibrido">Híbrido</option>
+                            <option value="otros">Otros</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -268,6 +298,8 @@
             document.getElementById('editBeneficios').value = empleoDatos.beneficios;
             document.getElementById('editUbicacion').value = empleoDatos.ubicacion;
             document.getElementById('editVacantes').value = empleoDatos.vacantes;
+            document.getElementById('editTipoContrato').value = empleoDatos.tipo_contrato;
+            document.getElementById('editModalidad').value = empleoDatos.modalidad_asistencia;
 
             let fecha = empleoDatos.fecha_final;
             if (fecha.includes('T')) {
@@ -300,7 +332,10 @@
             ubicacion: document.getElementById('editUbicacion').value,
             vacantes: parseInt(document.getElementById('editVacantes').value),
             fecha_final_postulacion: document.getElementById('editFechaFinal').value,
-            salario: document.getElementById('editSalarioMin').value
+            salario: document.getElementById('editSalarioMin').value,
+            tipo_contrato: document.getElementById('editTipoContrato').value,
+            modalidad_asistencia: document.getElementById('editModalidad').value
+
         };
         console.log(empleoDatos)
         try {
