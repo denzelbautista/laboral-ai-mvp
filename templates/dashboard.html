@@ -428,18 +428,55 @@
         }
     }
     function copiarEnlace(empleoId) {
-    const url = `${window.location.origin}/detallesempleo?id=${empleoId}`;
-    navigator.clipboard.writeText(url).then(() => {
-        // Mostrar toast de éxito
-        const toast = new bootstrap.Toast(document.getElementById('successToast'));
-        document.getElementById('toastMessage').textContent = 'Enlace copiado al portapapeles';
-        toast.show();
-    }).catch(err => {
-        // Mostrar toast de error
-        const toast = new bootstrap.Toast(document.getElementById('errorToast'));
-        document.getElementById('errorToastMessage').textContent = 'Error al copiar el enlace';
-        toast.show();
-    });
-}
+        const url = `${window.location.origin}/detallesempleo?id=${empleoId}`;
+
+        const tempInput = document.createElement('input');
+        tempInput.style.position = 'absolute';
+        tempInput.style.left = '-9999px';
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    mostrarNotificacion(true);
+                }).catch(() => {
+                    copiarConSeleccion();
+                });
+            } else {
+                copiarConSeleccion();
+            }
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            mostrarNotificacion(false);
+        }
+
+        function copiarConSeleccion() {
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                mostrarNotificacion(true);
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                mostrarNotificacion(false);
+            }
+        }
+
+        document.body.removeChild(tempInput);
+    }
+
+    function mostrarNotificacion(exito) {
+        if (exito) {
+            const toast = new bootstrap.Toast(document.getElementById('successToast'));
+            document.getElementById('toastMessage').textContent = 'Enlace copiado al portapapeles';
+            toast.show();
+        } else {
+            const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+            document.getElementById('errorToastMessage').textContent = 'Error al copiar el enlace';
+            toast.show();
+        }
+    }
 </script>
 {% endblock %}
