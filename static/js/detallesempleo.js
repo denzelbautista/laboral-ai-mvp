@@ -17,25 +17,102 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Crear contenido dinámico para los detalles del empleo
                 jobDetailsContainer.innerHTML = `
+                    <style>
+                        .general-description-job {
+                            transition: transform 0.2s;
+                            border: none;
+                            margin-bottom: 2rem;
+                        }
+
+                        .general-description-job:hover {
+                            transform: translateY(-5px);
+                        }
+
+                        .card {
+                            border-radius: 15px;
+                            border: 1px solid rgba(0,0,0,0.08);
+                        }
+
+                        .card-body {
+                            padding: 2rem;
+                        }
+                        
+                        .btn-postular {
+                            border-radius: 30px;
+                            padding: 1rem 2rem;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            margin-top: 1rem;
+                            transition: all 0.3s;
+                        }
+
+                        .btn-postular:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                        }
+
+                        .section-title {
+                            color: #2c3e50;
+                            margin-bottom: 1.5rem;
+                            padding-bottom: 0.5rem;
+                            border-bottom: 2px solid #e9ecef;
+                        }
+                        .section-title2 {
+                            margin-bottom: 1.5rem;
+                            padding-bottom: 0.5rem;
+                        }
+                        .toast {
+                            border-radius: 10px;
+                        }
+
+                                      
+                    </style>
                     <div class="col-lg-8">
                         <div class="general-description-job card shadow-sm">
-                            <div class="card-body">
-                                <button id="btn-copiar-{{ loop.index }}"
-                                    class="btn btn-secondary btn-sm"
-                                    data-job-name="${ empleo.nombre }"
-                                        title="Copiar nombre del empleo"
-                                    onclick="copiarAlPortapapeles('${ empleo.nombre }')">
-                                    <i class="fas fa-copy"></i> Copiar nombre del empleo
-                                </button>
-                                <p><strong>Descripción:</strong> ${empleo.descripcion}</p>
-                                <p><strong>Tipo de Contrato:</strong> ${empleo.tipo_contrato.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
-                                <p><strong>Modalidad:</strong> ${empleo.modalidad_asistencia.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
-                                <h5>Requisitos:</h5>
-                                <p>${empleo.requisitos || "No especificados"}</p> <!-- Manejar como texto -->
-                                <h5>Beneficios:</h5>
-                                <p>${empleo.beneficios || "No especificados"}</p> <!-- Manejar como texto -->
-                                <h5>Funciones:</h5>
-                                <p>${empleo.funciones || "No especificadas"}</p> <!-- Manejar como texto -->
+                            <div class="card-body position-relative">
+                                <div style="display: flex; gap: 15px; flex-direction: row">
+                                    <h4 class="section-title">Descripción del Puesto</h4>
+                                    <button id="btn-copiar-${empleo.id}"
+                                    class="btn btn-secondary btn-sm section-title2"
+                                    data-job-name="${empleo.nombre}"
+                                    title="Copiar nombre del empleo"
+                                    onclick="copiarAlPortapapeles('${empleo.nombre}')">
+                                        <i class="fas fa-copy"></i> Copiar nombre
+                                    </button>
+                                </div>
+                                
+                                
+                                
+                                <p class="lead mb-4">${empleo.descripcion}</p>
+                                
+                                <div class="info-section mb-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="mb-3"><strong>Tipo de Contrato:</strong><br>
+                                            ${empleo.tipo_contrato.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="mb-3"><strong>Modalidad:</strong><br>
+                                            ${empleo.modalidad_asistencia.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h4 class="section-title">Requisitos</h4>
+                                <div class="mb-4">
+                                    ${empleo.requisitos || "No especificados"}
+                                </div>
+
+                                <h4 class="section-title">Beneficios</h4>
+                                <div class="mb-4">
+                                    ${empleo.beneficios || "No especificados"}
+                                </div>
+
+                                <h4 class="section-title">Funciones</h4>
+                                <div class="mb-4">
+                                    ${empleo.funciones || "No especificadas"}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -47,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <p><i class="fas fa-users text-success me-2"></i><strong>Vacantes:</strong> ${empleo.vacantes || "No especificadas"}</p>
                                 <p><i class="fas fa-calendar-alt text-warning me-2"></i><strong>Fecha de publicación:</strong> ${empleo.fecha_creacion || "No disponible"}</p>
                                 <p><i class="fas fa-hourglass-end text-warning me-2"></i><strong>Fecha límite:</strong> ${empleo.fecha_final_postulacion || "No disponible"}</p>
-                                <a href="https://forms.gle/7xBM9NnXNtJfxNTC6" target="_blank" class="btn btn-primary w-100">
+                                <a href="https://forms.gle/7xBM9NnXNtJfxNTC6" target="_blank" class="btn btn-primary w-100 btn-postular">
                                     <i class="fas fa-paper-plane me-2"></i>Postular ahora
                                 </a>
                             </div>
