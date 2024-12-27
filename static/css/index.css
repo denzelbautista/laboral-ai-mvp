@@ -1,58 +1,38 @@
-.section-4 {
-    padding: 0 8%;
+.section-4, .section-5 {
+    padding: 2rem 8%;
     display: flex;
     align-items: center;
-    height: 87vh;
     gap: 6%;
+    min-height: 80vh;
 }
 
-.section-5 {
-    padding: 0 8%;
-    display: flex;
-    align-items: center;
-    height: 80vh;
-    gap: 8%;
-}
-
-.div-feedback img {
-    width: 65px;
-    height: 92px;
-    padding-bottom: 4%;
-}
-
-.img-feedback {
-    width: 40%;
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.div-recomendaciones {
+.div-feedback, .div-recomendaciones {
     width: 45%;
-    height: 80%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.div-recomendaciones img {
+.div-feedback img, .div-recomendaciones img {
     width: 65px;
     height: 92px;
     padding-bottom: 4%;
 }
 
-.img-recomendaciones {
-    width: 46%;
-    height: 70%;
+.img-feedback, .img-recomendaciones {
+    width: 40%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.custom-margin {
-    margin-top: 100px;
+.img-feedback img, .img-recomendaciones img {
+    max-width: 100%;
+    height: auto;
 }
+
 .logo-container {
     display: flex;
     flex-wrap: wrap;
@@ -63,6 +43,7 @@
     background-color: #f8f9fa;
     margin-top: 20px;
 }
+
 .logo-container a {
     display: flex;
     justify-content: center;
@@ -71,9 +52,7 @@
     max-height: 100px;
     transition: transform 0.3s ease;
 }
-.logo-container a:hover {
-    transform: scale(1.1);
-}
+
 .logo-container img {
     max-width: 100%;
     max-height: 100%;
@@ -81,9 +60,72 @@
     filter: grayscale(100%);
     transition: filter 0.3s ease;
 }
+
+@media screen and (max-width: 992px) {
+    .section-4, .section-5 {
+        flex-direction: column;
+        padding: 3rem 5%;
+        gap: 2rem;
+        min-height: auto;
+    }
+
+    .div-feedback, .div-recomendaciones,
+    .img-feedback, .img-recomendaciones {
+        width: 100%;
+        text-align: center;
+    }
+
+    .logo-container {
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .logo-container a {
+        max-width: 120px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .section-4, .section-5 {
+        padding: 2rem 4%;
+        gap: 1.5rem;
+    }
+
+    .div-feedback img, .div-recomendaciones img {
+        width: 50px;
+        height: 70px;
+    }
+
+    .logo-container {
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .logo-container a {
+        max-width: 100px;
+    }
+
+    .whatsapp-bubble {
+        bottom: 15px;
+        right: 15px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .whatsapp-icon {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.logo-container a:hover {
+    transform: scale(1.1);
+}
+
 .logo-container a:hover img {
     filter: grayscale(0%);
 }
+
 .whatsapp-bubble {
     position: fixed;
     bottom: 20px;
@@ -103,10 +145,4 @@
 .whatsapp-bubble:hover {
     transform: scale(1.1);
     background-color: #128C7E;
-}
-
-.whatsapp-icon {
-    width: 35px;
-    height: 35px;
-    fill: white;
 }

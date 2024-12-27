@@ -1,156 +1,226 @@
 {% extends "dashboard_base.html" %}
 
-
-
 {% block page_title %}Crear nuevo empleo{% endblock %}
 
 {% block dashboard_content %}
-<style>
-    textarea.form-control {
-        min-height: 150px;
-        resize: vertical;
-    }
+    <style>
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
 
-</style>
-<div class="main-content">
-  <h3 class="page-title">Publicar empleo</h3>
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
 
-  <form id="form-publicar-empleo">
-    <div class="form-group">
-      <label for="nombre_empleo">Nombre del empleo</label>
-      <input type="text" class="form-control" id="nombre_empleo" name="nombre_empleo" required>
-    </div>
+            .form-group {
+                margin-bottom: 1rem;
+            }
 
-    <div class="form-group">
-      <label for="fecha_final_postulacion">Fecha de cierre</label>
-      <input type="date" class="form-control" id="fecha_final_postulacion" name="fecha_final_postulacion" required>
-    </div>
+            .btn-block {
+                width: 100%;
+            }
+        }
+    </style>
 
-    <div class="form-group">
-      <label for="ubicacion">Ubicación</label>
-      <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
-    </div>
+    <div class="container-fluid px-3 px-md-4">
+        <div class="row">
+            <div class="col-12">
+                <h3 class="page-title my-4">Publicar empleo</h3>
 
-    <div class="form-group">
-      <label for="salario">Salario</label>
-      <div class="d-flex align-items-center gap-3">
-        <input type="number" class="form-control" id="salario" name="salario" required>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="ocultarSalario">
-          <label class="form-check-label" for="ocultarSalario">
-            Ocultar salario
-          </label>
+                <form id="form-publicar-empleo" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="nombre_empleo" class="form-label">Nombre del empleo</label>
+                                <input type="text" class="form-control" id="nombre_empleo" name="nombre_empleo" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="fecha_final_postulacion" class="form-label">Fecha de cierre</label>
+                                <input type="date" class="form-control" id="fecha_final_postulacion" name="fecha_final_postulacion" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="ubicacion" class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="salario" class="form-label">Salario</label>
+                                <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2">
+                                    <input type="number" class="form-control" id="salario" name="salario" required>
+                                    <div class="form-check ms-0 ms-sm-2">
+                                        <input class="form-check-input" type="checkbox" id="ocultarSalario">
+                                        <label class="form-check-label" for="ocultarSalario">
+                                            Ocultar salario
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="vacantes" class="form-label">Vacantes</label>
+                                <input type="number" class="form-control" id="vacantes" name="vacantes" min="1"
+                                       oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6 mb-3">
+                            <div class="form-group">
+                                <label for="tipo_contrato" class="form-label">Tipo de Contrato</label>
+                                <select class="form-select" id="tipo_contrato" name="tipo_contrato" required>
+                                    <option value="" disabled selected hidden>Seleccione una opción</option>
+                                    <option value="tiempo_completo">Tiempo completo</option>
+                                    <option value="medio_tiempo">Medio tiempo</option>
+                                    <option value="por_proyecto">Por proyecto</option>
+                                    <option value="freelance">Freelance</option>
+                                    <option value="por_horarios">Por horarios</option>
+                                    <option value="practicante">Practicante</option>
+                                    <option value="pasante">Pasante</option>
+                                    <option value="temporal">Temporal</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="modalidad_asistencia" class="form-label">Modalidad</label>
+                                <select class="form-select" id="modalidad_asistencia" name="modalidad_asistencia" required>
+                                    <option value="" disabled selected hidden>Seleccione una opción</option>
+                                    <option value="remoto">Remoto</option>
+                                    <option value="presencial">Presencial</option>
+                                    <option value="hibrido">Híbrido</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                <label for="funciones" class="form-label">Funciones</label>
+                                <textarea class="form-control" id="funciones" name="funciones" rows="5" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                <label for="beneficios" class="form-label">Beneficios</label>
+                                <textarea class="form-control" id="beneficios" name="beneficios" rows="5" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                <label for="requisitos" class="form-label">Requisitos</label>
+                                <textarea class="form-control" id="requisitos" name="requisitos" rows="5" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Publicar Empleo</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
 
-    <div class="form-group">
-      <label for="vacantes">Vacantes</label>
-      <input type="number" class="form-control" id="vacantes" name="vacantes" min="1" oninput="this.value =
-                !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required>
+    <!-- Modales -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Éxito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Empleo publicado con éxito. Visite el dashboard para visualizarlo</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label for="descripcion">Descripción</label>
-        <textarea class="form-control" id="descripcion" name="descripcion" rows="10" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="funciones">Funciones</label>
-        <textarea class="form-control" id="funciones" name="funciones" rows="10" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="beneficios">Beneficios</label>
-        <textarea class="form-control" id="beneficios" name="beneficios" rows="10" required></textarea>
-    </div>
-    <div class="form-group">
-        <label for="requisitos">Requisitos</label>
-        <textarea class="form-control" id="requisitos" name="requisitos" rows="10" required></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="tipo_contrato">Tipo de Contrato</label>
-      <select class="form-control" id="tipo_contrato" name="tipo_contrato" required>
-        <option value="" disabled selected hidden>Seleccione una opción</option>
-        <option value="tiempo_completo">Tiempo completo</option>
-        <option value="medio_tiempo">Medio tiempo</option>
-        <option value="por_proyecto">Por proyecto</option>
-        <option value="freelance">Freelance</option>
-        <option value="por_horarios">Por horarios</option>
-        <option value="practicante">Practicante</option>
-        <option value="pasante">Pasante</option>
-        <option value="temporal">Temporal</option>
-        <option value="otros">Otros</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="modalidad_asistencia">Modalidad</label>
-      <select class="form-control" id="modalidad_asistencia" name="modalidad_asistencia" required>
-        <option value="" disabled selected hidden>Seleccione una opción</option>
-        <option value="remoto">Remoto</option>
-        <option value="presencial">Presencial</option>
-        <option value="hibrido">Híbrido</option>
-        <option value="otros">Otros</option>
-      </select>
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block mt-3">Publicar Empleo</button>
-  </form>
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/registroempleo.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manejar checkbox de ocultar salario
+            document.getElementById('ocultarSalario').addEventListener('change', function() {
+                const salarioInput = document.getElementById('salario');
+                if (this.checked) {
+                    salarioInput.type = 'text';
+                    salarioInput.value = 'Oculto';
+                    salarioInput.disabled = true;
+                } else {
+                    salarioInput.type = 'number';
+                    salarioInput.value = '';
+                    salarioInput.disabled = false;
+                }
+            });
 
-</div>
-<!-- modales-->
-<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Éxito</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Empleo publicado con éxito. Visite el dashboard para visualizarlo</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+            document.querySelectorAll('textarea').forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+            });
 
-<div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Error</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="errorMessage"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- javascript propios -->
-<script src="{{ url_for('static', filename='js/registroempleo.js') }}"></script>
-<script>
-  document.getElementById('ocultarSalario').addEventListener('change', function () {
-    const salarioInput = document.getElementById('salario');
-    if (this.checked) {
-      salarioInput.type = 'text';
-      salarioInput.value = 'Oculto';
-      salarioInput.disabled = true;
-
-    } else {
-      salarioInput.value = '';
-      salarioInput.disabled = false;
-    }
-  });
-  document.querySelectorAll('textarea').forEach(textarea => {
-        textarea.addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
+            const form = document.getElementById('form-publicar-empleo');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
         });
-    });
-</script>
+    </script>
 {% endblock %}

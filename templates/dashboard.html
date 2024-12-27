@@ -4,27 +4,95 @@
 <style>
     .btn-sm {
         margin: 0 2px;
+        margin-bottom: 4px;
     }
 
     .modal-dialog {
-        max-width: 500px;
+        max-width: 95%;
+        margin: 1.75rem auto;
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: 500px;
+
+        }
     }
 
     .table td {
         vertical-align: middle;
+        word-break: break-word;
     }
 
     .table .btn {
         white-space: nowrap;
+        margin-right: 4px;
+        margin-bottom: 4px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
     }
 
     .table-responsive {
-        margin: 20px 0;
+        margin: 10px 0;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+    }
+
+    @media (max-width: 768px) {
+        .table {
+            display: block;
+        }
+
+        .table thead {
+            display: none;
+        }
+
+        .table tbody tr {
+            display: block;
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+            background: #fff;
+            padding: 0.5rem;
+            min-width: 350px;
+        }
+
+        .table td {
+            display: block;
+            text-align: right;
+            padding: 0.5rem;
+            position: relative;
+            padding-left: 50%;
+        }
+
+        .table td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 45%;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .table td:last-child {
+            border-bottom: 0;
+            text-align: center;
+            padding-left: 0.5rem;
+        }
+
+        .table td:last-child::before {
+            display: none;
+        }
     }
 
     .new-job-btn {
         margin: 20px 0;
+        width: 100%;
+    }
+
+    @media (min-width: 576px) {
+        .new-job-btn {
+            width: auto;
+        }
     }
 
     .new-job-btn a {
@@ -32,24 +100,9 @@
         text-decoration: none;
     }
 
-    .new-job-btn:hover {
-        transform: translateY(-2px);
-        transition: transform 0.2s;
-    }
-
-    .modal-dialog-centered {
-        display: flex;
-        align-items: center;
-        min-height: calc(100% - 1rem);
-    }
-
     .modal-content {
         border-radius: 0.5rem;
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    }
-
-    .modal-header.bg-danger .btn-close-white {
-        filter: brightness(0) invert(1);
     }
 
     .toast {
@@ -59,10 +112,26 @@
     .toast-body {
         padding: 1rem;
     }
-    .table .btn {
-        margin-right: 4px;
-        margin-bottom: 4px;
+
+    @media (max-width: 576px) {
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .form-control {
+            font-size: 16px;
+        }
+
+        .modal-footer {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-footer button {
+            width: 100%;
+        }
     }
+
 </style>
 <div class="table-responsive rounded">
     <table class="table table-hover bg-light">
@@ -83,30 +152,32 @@
         <tbody id="jobsTableBody">
             {% for empleo in empleos %}
             <tr>
-                <td>{{ empleo.nombre_empleo }}</td>
-                <td style="max-width: 550px;">{{ empleo.descripcion }}</td>
-                <td >{{ empleo.ubicacion }}</td>
-                <td>{{ empleo.vacantes }}</td>
-                <td>{{ empleo.fecha_final }}</td>
-                <td>{% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario }}</td>
-                <td>{{ empleo.tipo_contrato | replace('_', ' ') | title }}</td>
-                <td>{{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</td>
-                <td>
-                    <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-briefcase"></i> Empleo
-                    </a>
-                    <button type="button"
-                            onclick="copiarEnlace('{{ empleo.id }}')"
-                            class="btn btn-secondary btn-sm"
-                            title="Copiar link del empleo">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                    <button type="button" onclick="editarEmpleo('{{ empleo.id }}', {{ empleo }})" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button type="button" onclick="eliminarEmpleo('{{ empleo.id }}')" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </button>
+                <td data-label="Nombre de Puesto">{{ empleo.nombre_empleo }}</td>
+                <td data-label="Descripción">{{ empleo.descripcion }}</td>
+                <td data-label="Ubicación">{{ empleo.ubicacion }}</td>
+                <td data-label="Nº de Vacantes">{{ empleo.vacantes }}</td>
+                <td data-label="Fecha de Finalización">{{ empleo.fecha_final }}</td>
+                <td data-label="Salario">{% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario }}</td>
+                <td data-label="Tipo de Contrato">{{ empleo.tipo_contrato | replace('_', ' ') | title }}</td>
+                <td data-label="Modalidad">{{ empleo.modalidad_asistencia | replace('_', ' ') | title }}</td>
+                <td data-label="Acciones">
+                    <div class="btn-group-vertical btn-group-sm d-md-inline-flex">
+                        <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info">
+                            <i class="fas fa-briefcase"></i> Empleo
+                        </a>
+                        <button type="button"
+                                onclick="copiarEnlace('{{ empleo.id }}')"
+                                class="btn btn-secondary"
+                                title="Copiar link del empleo">
+                            <i class="fas fa-copy"></i> Copiar
+                        </button>
+                        <button type="button" onclick="editarEmpleo('{{ empleo.id }}', {{ empleo }})" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button type="button" onclick="eliminarEmpleo('{{ empleo.id }}')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

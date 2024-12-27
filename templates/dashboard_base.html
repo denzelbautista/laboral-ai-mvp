@@ -6,15 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard | Laboral AI</title>
 
-    <!-- Dashboard-specific CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/fontawesome.css') }}" />
 
-    <!-- Custom Dashboard Styles -->
     <style>
-        /* Inline critical CSS for faster loading */
-
-        :root {
+       :root {
             --primary-color: #0c4785;
             --sidebar-bg: #1d214e;
             --sidebar-text: #ecf0f1;
@@ -23,24 +19,26 @@
 
         body {
             background-color: #f4f6f9;
+            overflow-x: hidden;
         }
 
         .dashboard-wrapper {
             display: flex;
             min-height: 100vh;
+            position: relative;
         }
 
         .sidebar {
             width: 250px;
             background-color: var(--sidebar-bg);
             color: var(--sidebar-text);
-            transition: width 0.3s ease;
+            transition: all 0.3s ease;
             position: fixed;
             height: 100vh;
             left: 0;
             top: 0;
             z-index: 1000;
-            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .sidebar-logo {
@@ -51,7 +49,7 @@
 
         .sidebar-logo img {
             max-width: 150px;
-            margin: 0 auto;
+            height: auto;
         }
 
         .sidebar .nav {
@@ -64,6 +62,7 @@
             display: flex;
             align-items: center;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .sidebar .nav-link i {
@@ -91,12 +90,15 @@
             align-items: center;
             margin-left: 250px;
             transition: margin-left 0.3s ease;
-            width: 60vw;
+            width: calc(100% - 250px);
+            position: fixed;
+            top: 0;
+            z-index: 999;
         }
 
         .dashboard-content {
             margin-left: 250px;
-            padding: 20px;
+            padding: 85px 20px 20px;
             width: calc(100% - 250px);
             transition: all 0.3s ease;
         }
@@ -104,35 +106,7 @@
         .header-right {
             display: flex;
             align-items: center;
-        }
-
-        .header-right .user-info {
-            display: flex;
-            align-items: center;
-            margin-right: 20px;
-        }
-
-        .header-right .user-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .header-right .notifications {
-            position: relative;
-            margin-right: 15px;
-        }
-
-        .header-right .notifications .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #dc3545;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 0.7rem;
+            gap: 15px;
         }
 
         .user-avatar {
@@ -140,26 +114,96 @@
         }
 
         .avatar-circle {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             background-color: #3498db;
             color: #fff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 600;
             margin: 0 auto;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-
         .avatar-initials {
             text-transform: uppercase;
         }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsiveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                width: 0;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                width: 250px;
+                transform: translateX(0);
+            }
+
+            .dashboard-header {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .dashboard-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .dashboard-wrapper.sidebar-active .sidebar {
+                transform: translateX(0);
+            }
+
+            .dashboard-wrapper.sidebar-active::after {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .dashboard-header {
+                padding: 10px 15px;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .avatar-circle {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .sidebar .nav-link {
+                padding: 10px 15px;
+            }
+        }
     </style>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
 </head>
 
 <body>
@@ -222,16 +266,7 @@
                 <a href="{{url_for('views.shop')}}" class="nav-link">
                     <i class="fas fa-briefcase"></i> Empleos
                 </a>
-                {# <a href="#" class="nav-link">#}
-                    {# <i class="fas fa-comments"></i> Chat#}
-                    {# </a>#}
-                {# <a href="#" class="nav-link">#}
-                    {# <i class="fas fa-users"></i> Candidatos#}
-                    {# </a>#}
-                {# <a href="#" class="nav-link">#}
-                    {# <i class="fas fa-cog"></i> Configuración#}
-                    {# </a>#}
-                {# TODO: connection to logout_user function #}
+
                 <a id="logoutButton" class="nav-link mt-auto">
                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </a>
@@ -242,8 +277,11 @@
         <div class="dashboard-main">
             <!-- Header -->
             <header class="dashboard-header">
-                <div class="header-left">
-                    <h2 class="page-title">{% block page_title %}Dashboard{% endblock %}</h2>
+                <div class="header-left d-flex align-items-center">
+                    <button class="menu-toggle me-3">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h2 class="page-title mb-0">{% block page_title %}Dashboard{% endblock %}</h2>
                 </div>
                 <div class="header-right">
 
@@ -263,10 +301,32 @@
         </div>
     </div>
 
-    <!-- Dashboard-specific scripts -->
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+     <script>
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.dashboard-wrapper').classList.toggle('sidebar-active');
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target) && window.innerWidth < 992) {
+                document.querySelector('.dashboard-wrapper').classList.remove('sidebar-active');
+                sidebar.classList.remove('active');
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 992) {
+                document.querySelector('.dashboard-wrapper').classList.remove('sidebar-active');
+                document.querySelector('.sidebar').classList.remove('active');
+            }
+        });
+    </script>
 </body>
 
 </html>
