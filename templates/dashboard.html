@@ -84,8 +84,8 @@
             {% for empleo in empleos %}
             <tr>
                 <td>{{ empleo.nombre_empleo }}</td>
-                <td>{{ empleo.descripcion }}</td>
-                <td>{{ empleo.ubicacion }}</td>
+                <td style="max-width: 550px;">{{ empleo.descripcion }}</td>
+                <td >{{ empleo.ubicacion }}</td>
                 <td>{{ empleo.vacantes }}</td>
                 <td>{{ empleo.fecha_final }}</td>
                 <td>{% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario }}</td>
@@ -98,7 +98,7 @@
                     <button type="button"
                             onclick="copiarEnlace('{{ empleo.id }}')"
                             class="btn btn-secondary btn-sm"
-                            title="Copiar link al empleo">
+                            title="Copiar link del empleo">
                         <i class="fas fa-copy"></i>
                     </button>
                     <button type="button" onclick="editarEmpleo('{{ empleo.id }}', {{ empleo }})" class="btn btn-warning btn-sm">
@@ -185,7 +185,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="editSalarioMin" class="form-label">Salario</label>
-                        <input type="text" class="form-control" id="editSalarioMin" required>
+                        <div class="d-flex align-items-center gap-3">
+                            <input type="number" class="form-control" id="editSalarioMin" name="salario" required>
+                            <div class="form-check">
+                              <input class="form-check-input" type="checkbox" id="ocultarSalario">
+                              <label class="form-check-label" for="ocultarSalario">
+                                Ocultar salario
+                              </label>
+                            </div>
+                          </div>
                     </div>
                     <div class="mb-3">
                         <label for="editTipoContrato" class="form-label">Tipo de Contrato</label>
@@ -478,5 +486,18 @@
             toast.show();
         }
     }
+
+    document.getElementById('ocultarSalario').addEventListener('change', function () {
+        const salarioInput = document.getElementById('editSalarioMin');
+        if (this.checked) {
+            salarioInput.type = 'text';
+            salarioInput.value = 'Oculto';
+            salarioInput.disabled = true;
+
+        } else {
+            salarioInput.value = '';
+            salarioInput.disabled = false;
+        }
+    });
 </script>
 {% endblock %}

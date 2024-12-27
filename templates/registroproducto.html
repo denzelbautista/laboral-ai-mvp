@@ -5,7 +5,13 @@
 {% block page_title %}Crear nuevo empleo{% endblock %}
 
 {% block dashboard_content %}
+<style>
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
 
+</style>
 <div class="main-content">
   <h3 class="page-title">Publicar empleo</h3>
 
@@ -45,23 +51,20 @@
     </div>
 
     <div class="form-group">
-      <label for="descripcion">Descripción</label>
-      <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+        <label for="descripcion">Descripción</label>
+        <textarea class="form-control" id="descripcion" name="descripcion" rows="10" required></textarea>
     </div>
-
     <div class="form-group">
-      <label for="funciones">Funciones</label>
-      <textarea class="form-control" id="funciones" name="funciones" required></textarea>
+        <label for="funciones">Funciones</label>
+        <textarea class="form-control" id="funciones" name="funciones" rows="10" required></textarea>
     </div>
-
     <div class="form-group">
-      <label for="beneficios">Beneficios</label>
-      <textarea class="form-control" id="beneficios" name="beneficios" required></textarea>
+        <label for="beneficios">Beneficios</label>
+        <textarea class="form-control" id="beneficios" name="beneficios" rows="10" required></textarea>
     </div>
-
     <div class="form-group">
-      <label for="requisitos">Requisitos</label>
-      <textarea class="form-control" id="requisitos" name="requisitos" required></textarea>
+        <label for="requisitos">Requisitos</label>
+        <textarea class="form-control" id="requisitos" name="requisitos" rows="10" required></textarea>
     </div>
 
     <div class="form-group">
@@ -143,5 +146,11 @@
       salarioInput.disabled = false;
     }
   });
+  document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    });
 </script>
 {% endblock %}

@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="col-lg-8">
                         <div class="general-description-job card shadow-sm">
                             <div class="card-body">
+                                <button id="btn-copiar-{{ loop.index }}"
+                                    class="btn btn-secondary btn-sm"
+                                    data-job-name="${ empleo.nombre }"
+                                        title="Copiar nombre del empleo"
+                                    onclick="copiarAlPortapapeles('${ empleo.nombre }')">
+                                    <i class="fas fa-copy"></i> Copiar nombre del empleo
+                                </button>
                                 <p><strong>Descripción:</strong> ${empleo.descripcion}</p>
                                 <p><strong>Tipo de Contrato:</strong> ${empleo.tipo_contrato.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
                                 <p><strong>Modalidad:</strong> ${empleo.modalidad_asistencia.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}</p>
@@ -46,6 +53,34 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- exito -->
+                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body" id="toastMessage">
+                                    Operación exitosa
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- error -->
+                    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                        <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert"
+                             aria-live="assertive" aria-atomic="true">
+                            <div class="d-flex">
+                                <div class="toast-body" id="errorToastMessage">
+                                    Error en la operación
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
                 `;
             } else {
                 jobTitle.textContent = "Error al cargar el empleo";
@@ -58,3 +93,54 @@ document.addEventListener('DOMContentLoaded', function () {
             jobDetailsContainer.innerHTML = `<p>Error al cargar los detalles del empleo.</p>`;
         });
 });
+function copiarAlPortapapeles(texto) {
+    const url = texto;
+    console.log("klok")
+    const tempInput = document.createElement('input');
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px';
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(url).then(() => {
+                mostrarNotificacion(true);
+            }).catch(() => {
+                copiarConSeleccion();
+            });
+        } else {
+            copiarConSeleccion();
+        }
+    } catch (err) {
+        console.error('Error al copiar:', err);
+        mostrarNotificacion(false);
+    }
+
+    function copiarConSeleccion() {
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999);
+
+        try {
+            document.execCommand('copy');
+            mostrarNotificacion(true);
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            mostrarNotificacion(false);
+        }
+    }
+
+    document.body.removeChild(tempInput);
+}
+
+function mostrarNotificacion(exito) {
+    if (exito) {
+        const toast = new bootstrap.Toast(document.getElementById('successToast'));
+        document.getElementById('toastMessage').textContent = 'Nombre del empleo copiado al portapapeles';
+        toast.show();
+    } else {
+        const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+        document.getElementById('errorToastMessage').textContent = 'Error al copiar el nombre del empleo';
+        toast.show();
+    }
+}

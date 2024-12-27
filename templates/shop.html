@@ -108,21 +108,21 @@
 
                             <div class="col-lg-8">
 
-                                <div style="display: flex; justify-content: space-between;">
+                                <div style="display: flex; gap: 15px">
 
 
                                     <h2 class="mb-4">{{ empleo.nombre_empleo }}</h2>
                                     <div>
 
-                                        <button id="btn-ir-empleo-{{ loop.index }}"
-                                            class="btn btn-outline-secondary2 btn-sm" data-job-id="{{ empleo.id }}">
-                                            <i class="bi bi-goto"></i> Ir a Empleo
-                                        </button>
+                                        <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info btn-sm">
+                                            <i class="fas fa-briefcase"></i> Ir a empleo
+                                        </a>
                                         <button id="btn-copiar-{{ loop.index }}"
-                                            class="btn btn-outline-secondary btn-sm"
+                                            class="btn btn-secondary btn-sm"
                                             data-job-name="{{ empleo.nombre_empleo }}"
+                                                title="Copiar nombre del empleo"
                                             onclick="copiarAlPortapapeles('{{ empleo.nombre_empleo }}', {{ loop.index }})">
-                                            <i class="bi bi-copy"></i> Copiar nombre empleo
+                                            <i class="fas fa-copy"></i>
                                         </button>
                                     </div>
 
@@ -216,6 +216,34 @@
         </div>
     </div>
 </div>
+
+<!-- exito -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">
+                Operación exitosa
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- error -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="errorToastMessage">
+                Error en la operación
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+</div>
 <script>
     document.querySelectorAll('.btn-outline-secondary2').forEach(button => {
         button.addEventListener('click', function () {
@@ -226,19 +254,57 @@
 
 
     function copiarAlPortapapeles(texto, index) {
-        event.stopPropagation();
+        const url = texto;
 
-        navigator.clipboard.writeText(texto).then(() => {
-            const modal = new bootstrap.Modal(document.getElementById('copyModal'));
-            modal.show();
+        const tempInput = document.createElement('input');
+        tempInput.style.position = 'absolute';
+        tempInput.style.left = '-9999px';
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
 
-            setTimeout(() => {
-                modal.hide();
-            }, 2000);
-        }).catch(err => {
-            console.error("Error al copiar el texto: ", err);
-        });
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    mostrarNotificacion(true);
+                }).catch(() => {
+                    copiarConSeleccion();
+                });
+            } else {
+                copiarConSeleccion();
+            }
+        } catch (err) {
+            console.error('Error al copiar:', err);
+            mostrarNotificacion(false);
+        }
+
+        function copiarConSeleccion() {
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+
+            try {
+                document.execCommand('copy');
+                mostrarNotificacion(true);
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                mostrarNotificacion(false);
+            }
+        }
+
+        document.body.removeChild(tempInput);
     }
+
+    function mostrarNotificacion(exito) {
+        if (exito) {
+            const toast = new bootstrap.Toast(document.getElementById('successToast'));
+            document.getElementById('toastMessage').textContent = 'Nombre del empleo copiado al portapapeles';
+            toast.show();
+        } else {
+            const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+            document.getElementById('errorToastMessage').textContent = 'Error al copiar el nombre del empleo';
+            toast.show();
+        }
+    }
+
     function toggleJobDetails(index) {
         const detailsContainer = document.getElementById(`job-details-${index}`);
         if (detailsContainer) {
