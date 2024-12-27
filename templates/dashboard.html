@@ -95,7 +95,10 @@
                     <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info btn-sm">
                         <i class="fas fa-briefcase"></i> Empleo
                     </a>
-                    <button type="button" onclick="copiarEnlace('{{ empleo.id }}')" class="btn btn-secondary btn-sm">
+                    <button type="button"
+                            onclick="copiarEnlace('{{ empleo.id }}')"
+                            class="btn btn-secondary btn-sm"
+                            title="Copiar link al empleo">
                         <i class="fas fa-copy"></i>
                     </button>
                     <button type="button" onclick="editarEmpleo('{{ empleo.id }}', {{ empleo }})" class="btn btn-warning btn-sm">
@@ -295,6 +298,8 @@
         eliminarModal = new bootstrap.Modal(document.getElementById('eliminarEmpleoModal'));
         successModal = new bootstrap.Modal(document.getElementById('successModal'));
         errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+
+
     });
 
     function editarEmpleo(detalleKey, empleoDatos) {
