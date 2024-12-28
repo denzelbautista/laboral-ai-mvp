@@ -35,7 +35,7 @@ def create_empresa():
             # Crear una nueva empresa
             nueva_empresa = Empresa(
                 correo=data['correo'],
-                contrasena=generate_password_hash(data['contrasena']),
+                contrasena= data['contrasena'],
                 telefono=data['numero_contacto'],
                 ruc=data['ruc'],
                 nombre_empresa=data['nombre_empresa'],
@@ -85,7 +85,7 @@ def login():
 
         empresa = Empresa.query.filter_by(correo=correo).first()
 
-        if empresa and check_password_hash(empresa.contrasena, contrasena):
+        if empresa and (empresa.contrasena == contrasena):
             login_user(empresa)
             return jsonify({'success': True, 'message': 'Inicio de sesión exitoso'}), 200
         else:
