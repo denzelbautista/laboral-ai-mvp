@@ -79,8 +79,10 @@
                     </div>
 
                     <p class="card-description mb-4">
-                        <strong>Salario:</strong> {% if empleo.salario != 'Oculto' %}S/. {% endif %}{{ empleo.salario
-                        }}<br>
+                        <strong>Tipo de Contrato:</strong> {{ empleo.tipo_contrato }}<br>
+                        <strong>Modalidad:</strong> {{ empleo.modalidad }}<br>
+                        <strong>Ubicación:</strong> {{ empleo.ubicacion }}<br>
+                        <strong>Fecha Límite:</strong> {{ empleo.fecha_final }}<br>
                         <strong>Vacantes:</strong> {{ empleo.vacantes }}
                     </p>
 
@@ -117,17 +119,16 @@
                                         <a href="/detallesempleo?id={{ empleo.id }}" class="btn btn-info btn-sm">
                                             <i class="fas fa-briefcase"></i> Ir a empleo
                                         </a>
-                                        <button id="btn-copiar-{{ loop.index }}"
-                                            class="btn btn-secondary btn-sm"
-                                            data-job-name="{{ empleo.nombre_empleo }}"
-                                                title="Copiar nombre del empleo"
+                                        <button id="btn-copiar-{{ loop.index }}" class="btn btn-secondary btn-sm"
+                                            data-job-name="{{ empleo.nombre_empleo }}" title="Copiar nombre del empleo"
                                             onclick="copiarAlPortapapeles('{{ empleo.nombre_empleo }}', {{ loop.index }})">
                                             <i class="fas fa-copy"></i>
                                         </button>
                                     </div>
 
                                 </div>
-
+                                <p><strong>Empresa:</strong> <span
+                                        data-empresa-id="{{ empleo.empresa_id }}">Cargando...</span></p>
                                 <p><strong>Descripción:</strong> {{ empleo.descripcion }}</p>
                                 <p><strong>Tipo de Contrato:</strong> {{ empleo.tipo_contrato | replace('_', ' ') |
                                     title }}</p>
@@ -220,13 +221,13 @@
 <!-- exito -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
-         aria-live="assertive" aria-atomic="true">
+        aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body" id="toastMessage">
                 Operación exitosa
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
+                aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -234,13 +235,13 @@
 <!-- error -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <div id="errorToast" class="toast align-items-center text-white bg-danger border-0" role="alert"
-         aria-live="assertive" aria-atomic="true">
+        aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body" id="errorToastMessage">
                 Error en la operación
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
+                aria-label="Close"></button>
         </div>
     </div>
 </div>
@@ -320,6 +321,34 @@
             document.body.style.overflow = 'auto'; // Si scrooll
         }
     }
+
+    // Esperar a que se cargue el DOM
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleccionar todos los elementos que tengan un atributo data-empresa-id
+        const empresaElements = document.querySelectorAll('[data-empresa-id]');
+
+        // Iterar sobre cada elemento
+        empresaElements.forEach(element => {
+            const empresaId = element.getAttribute('data-empresa-id'); // Obtener el id de la empresa
+
+            // Realizar el fetch al endpoint de Flask
+            fetch(`/empleo/empresa/${empresaId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Actualizar el contenido del elemento con el nombre de la empresa
+                        element.textContent = data.empresa;
+                    } else {
+                        // Mostrar un mensaje de error si no se encuentra la empresa
+                        element.textContent = "Empresa no encontrada";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error obteniendo la empresa:', error);
+                    element.textContent = "Error al cargar empresa";
+                });
+        });
+    });
 
 </script>
 {% endblock %}

@@ -154,13 +154,27 @@ def get_empleo(id):
                 'beneficios': empleo.beneficios,
                 'requisitos': empleo.requisitos,
                 'tipo_contrato': empleo.tipo_contrato,
-                'modalidad_asistencia': empleo.modalidad_asistencia
+                'modalidad_asistencia': empleo.modalidad_asistencia,
+                'empresa_id': empleo.empresa_id
             }
             return jsonify({'success': True, 'empleo': empleo_data}), 200
         else:
             return jsonify({'success': False, 'message': 'Empleo no encontrado'}), 404
     except Exception as e:
         return jsonify({'success': False, 'message': 'Error obteniendo empleo'}), 500
+
+@app.route('/empleo/empresa/<id>', methods=['GET'])
+def get_empresa_from_empleo(id):
+    try:
+        empresa = Empresa.query.get(id)
+        if empresa:
+            empresa_nombre = empresa.nombre_empresa,
+            
+            return jsonify({'success': True, 'empresa': empresa_nombre}), 200
+        else:
+            return jsonify({'success': False, 'message': 'Empresa no encontrada'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'Error obteniendo empresa'}), 500
 
 
 # Ruta para eliminar un empleo

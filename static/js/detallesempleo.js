@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="col-lg-4">
                         <div class="general-description-job card shadow-sm">
                             <div class="card-body">
+                                <p id="empresa-nombre"><strong>Empresa:</strong> Cargando...</p>
                                 <p><i class="fas fa-map-marker-alt text-danger me-2"></i><strong>Ubicación:</strong> ${empleo.ubicacion || "No especificada"}</p>
                                 <p><i class="fas fa-money-bill-wave text-success me-2"></i><strong>Salario:</strong> ${empleo.salario || "No especificado"}</p>
                                 <p><i class="fas fa-users text-success me-2"></i><strong>Vacantes:</strong> ${empleo.vacantes || "No especificadas"}</p>
@@ -159,6 +160,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 `;
+
+                // Hacer otra solicitud para obtener el nombre de la empresa
+                fetch(`/empleo/empresa/${empleo.empresa_id}`)
+                    .then(response => response.json())
+                    .then(empresaData => {
+                        if (empresaData.success) {
+                            // Actualizar el nombre de la empresa
+                            const empresaNombreElement = document.getElementById('empresa-nombre');
+                            empresaNombreElement.innerHTML = `<strong>Empresa:</strong> ${empresaData.empresa}`;
+                        } else {
+                            console.error('Error al cargar el nombre de la empresa:', empresaData.message);
+                            document.getElementById('empresa-nombre').textContent = "Empresa no encontrada";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al cargar el nombre de la empresa:', error);
+                        document.getElementById('empresa-nombre').textContent = "Error al cargar la empresa";
+                    });
             } else {
                 jobTitle.textContent = "Error al cargar el empleo";
                 jobDetailsContainer.innerHTML = `<p>Error al cargar los detalles del empleo.</p>`;
@@ -170,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
             jobDetailsContainer.innerHTML = `<p>Error al cargar los detalles del empleo.</p>`;
         });
 });
+
 function copiarAlPortapapeles(texto) {
     const url = texto;
     console.log("klok")
